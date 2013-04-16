@@ -28,6 +28,7 @@ int cportnumber=22;
 int bdrate=9600;
 int buffersize = 0;
 short samplenumber = 0;
+short typeinput = 0;
 Sample Samples[1000];
 FILE *logfile;
 
@@ -41,11 +42,9 @@ FILE* OpenFile(){
 	    mkdir("logs", 0700);
 	}
 
-	char testname[30] = "logs/";
-	char currenttime[20];
-	sprintf(currenttime, "day-%d hour-%d min-%d.txt", time->tm_mday, time->tm_hour, time->tm_min);
-	strcat(testname, currenttime);
-	logfile = fopen(testname, "w");
+	char logfilename[40] = "logs/";
+	sprintf(logfilename, "logs/day-%d,hour-%d,min-%d.txt", time->tm_mday, time->tm_hour, time->tm_min);
+	logfile = fopen(logfilename, "w");
 	return logfile;
 }
 
@@ -54,10 +53,10 @@ int ConnectSerialPort(){
 
 	if(RS232_OpenComport(cportnumber, bdrate)){
 		printf("Can not open comport\n");
-		return 0;
+		return 1;
 	}
-
-	return 1;
+	printf("Connected serial port successfully\n");
+	return 0;
 }
 
 int ProcessInput(){
@@ -65,25 +64,41 @@ int ProcessInput(){
 
 	for(i=0; i < buffersize; i++){
 		unsigned short temp = (unsigned short) buf[i];
-		fprintf(logfile, "%d", temp);
+		fprintf(logfile, "%d\n", temp);
+		printf("%d\n", temp);
+		switch(typeinput){
+			case 0:
+				if(temp == 85){
+					typeinput++;
+				}
+				fprintf(logfile, "%d ",samplenumber);
+				samplenumber++;
+				break;
+		}
 	}
 
 	return 0;
 }
 
 int main(){
-//	ConnectSerialPort();
+	ConnectSerialPort();
 	OpenFile();
+	printf("Opened log file\n");
 	char userinput = '!';
 
 	while(1){
-		scanf("%c",&userinput);
+	//	if(){
+			scanf("%c",&userinput);
+	//	}
+
 		if(userinput == 'x' || userinput == 'c'){
 			printf("Closing logfile...\n");
 			fclose(logfile);
 			printf("Logfile closed\n");
 			break;
 		}
+		printf("Polling comport...\n");
+		fprintf(logfile, "Polling comport...\n");
 		buffersize = RS232_PollComport(cportnumber, buf, 4095);
 		if(buffersize > 0){
 			buf[buffersize] = 0;
