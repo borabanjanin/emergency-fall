@@ -63,71 +63,83 @@ int ProcessInput(){
 	int i;
 
 	for(i=0; i < buffersize; i++){
-		unsigned short temp = (unsigned short) buf[i];
-		fprintf(logfile, "%d\n", temp);
-		printf("%d\n", temp);
+		unsigned short inputbyte = (unsigned short) buf[i];
+		int measurement;
+		fprintf(logfile, "%d\n", inputbyte);
+		printf("%d\n", inputbyte);
 		switch(typeinput){
 			case 0:
-				if(temp == 85){
+				if(inputbyte == 85){
 					typeinput++;
 				}
 				fprintf(logfile, "%d ",samplenumber);
-				samplenumber++;
 				break;
 
 			case 1:
-				fprintf(logfile, "%d ",temp);
+				measurement = inputbyte << 8;
 				typeinput++;
 				break;
 
 			case 2:
-				fprintf(logfile, "%d ",temp);
+				measurement = measurement || inputbyte;
+				Samples[samplenumber].xaccel = measurement;
+				fprintf(logfile, "%d ",Samples[samplenumber].xaccel);
 				typeinput++;
 				break;
 
 			case 3:
-				fprintf(logfile, "%d ",temp);
+				measurement = inputbyte << 8;
 				typeinput++;
 				break;
 
 			case 4:
-				fprintf(logfile, "%d ",temp);
+				Samples[samplenumber].yaccel = measurement;
+				fprintf(logfile, "%d ",Samples[samplenumber].yaccel);
 				typeinput++;
 				break;
 
 			case 5:
-				fprintf(logfile, "%d ",temp);
+				measurement = inputbyte << 8;
 				typeinput++;
 				break;
 
 			case 6:
-				fprintf(logfile, "%d ",temp);
+				Samples[samplenumber].zaccel = measurement;
+				fprintf(logfile, "%d ",Samples[samplenumber].zaccel);
 				typeinput++;
 				break;
 
 			case 7:
-				fprintf(logfile, "%d ",temp);
+				measurement = inputbyte << 8;
 				typeinput++;
 				break;
 
 			case 8:
-				fprintf(logfile, "%d ",temp);
+				Samples[samplenumber].xrot = measurement;
+				fprintf(logfile, "%d ",Samples[samplenumber].xrot);
 				typeinput++;
 				break;
 
 			case 9:
-				fprintf(logfile, "%d ",temp);
+				measurement = inputbyte << 8;
 				typeinput++;
 				break;
 
 			case 10:
-				fprintf(logfile, "%d ",temp);
+				Samples[samplenumber].yrot = measurement;
+				fprintf(logfile, "%d ",Samples[samplenumber].yrot);
 				typeinput++;
 				break;
 
 			case 11:
-				fprintf(logfile, "%d \n",temp);
+				measurement = inputbyte << 8;
+				break;
+
+			case 12:
+				Samples[samplenumber].zrot = measurement;
+				fprintf(logfile, "%d \n",Samples[samplenumber].zrot);
 				typeinput = 0;
+				samplenumber++;
 				break;
 		}
 	}
