@@ -34,9 +34,8 @@ FILE *logfile;
 FILE* OpenFile(){
 
 	struct stat st = {0};
-	time_t now;
-	struct tm* time;
-	time = localtime(&now);
+	time_t now = time(NULL);
+	struct tm* time = localtime(&now);
 
 	if (stat("logs", &st) == -1) {
 	    mkdir("logs", 0700);
@@ -80,6 +79,9 @@ int main(){
 	while(1){
 		scanf("%c",&userinput);
 		if(userinput == 'x' || userinput == 'c'){
+			printf("Closing logfile...\n");
+			fclose(logfile);
+			printf("Logfile closed\n");
 			break;
 		}
 		buffersize = RS232_PollComport(cportnumber, buf, 4095);
