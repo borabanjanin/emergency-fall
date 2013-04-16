@@ -74,6 +74,61 @@ int ProcessInput(){
 				fprintf(logfile, "%d ",samplenumber);
 				samplenumber++;
 				break;
+
+			case 1:
+				fprintf(logfile, "%d ",temp);
+				typeinput++;
+				break;
+
+			case 2:
+				fprintf(logfile, "%d ",temp);
+				typeinput++;
+				break;
+
+			case 3:
+				fprintf(logfile, "%d ",temp);
+				typeinput++;
+				break;
+
+			case 4:
+				fprintf(logfile, "%d ",temp);
+				typeinput++;
+				break;
+
+			case 5:
+				fprintf(logfile, "%d ",temp);
+				typeinput++;
+				break;
+
+			case 6:
+				fprintf(logfile, "%d ",temp);
+				typeinput++;
+				break;
+
+			case 7:
+				fprintf(logfile, "%d ",temp);
+				typeinput++;
+				break;
+
+			case 8:
+				fprintf(logfile, "%d ",temp);
+				typeinput++;
+				break;
+
+			case 9:
+				fprintf(logfile, "%d ",temp);
+				typeinput++;
+				break;
+
+			case 10:
+				fprintf(logfile, "%d ",temp);
+				typeinput++;
+				break;
+
+			case 11:
+				fprintf(logfile, "%d \n",temp);
+				typeinput = 0;
+				break;
 		}
 	}
 
