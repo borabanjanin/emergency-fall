@@ -1,59 +1,97 @@
-
-#include <stdlib.h>
-#include <stdio.h>
-
-#ifdef _WIN32
-#include <Windows.h>
-#else
-#include <unistd.h>
-#endif
+/***********************************************
+ ***********************************************
+ *Emergency Fall Detection Source Code
+ *
+ *by Bora Banjanin, Chia-Ning Wang, and Lingrui Zhang
+ *
+ *for EE 449 Controls Capstone
+ *
+ *Proprietary Information DO NOT USE :)
+ ***********************************************
+ ***********************************************/
 
 #include "rs232.h"
 
+typedef struct Sample{
+	unsigned short n;
+	int xaccel;
+	int yaccel;
+	int zaccel;
+	int xrot;
+	int yrot;
+	int zrot;
+
+}Sample;
+
+unsigned char buf[4096];
+int cportnumber=22;
+int bdrate=9600;
+int buffersize = 0;
+short samplenumber = 0;
+Sample Samples[1000];
+FILE *logfile;
+
+FILE* OpenFile(){
+
+	struct stat st = {0};
+	time_t now;
+	struct tm* time;
+	time = localtime(&now);
+
+	if (stat("logs", &st) == -1) {
+	    mkdir("logs", 0700);
+	}
+
+	char testname[30] = "logs/";
+	char currenttime[20];
+	sprintf(currenttime, "day-%d hour-%d min-%d.txt", time->tm_mday, time->tm_hour, time->tm_min);
+	strcat(testname, currenttime);
+	logfile = fopen(testname, "w");
+	return logfile;
+}
 
 
-int main()
-{
-  int i, n,
-      cport_nr=22,        /* /dev/ttyS0 (COM1 on windows) */
-      bdrate=9600;       /* 9600 baud */
+int ConnectSerialPort(){
 
-  unsigned char buf[4096];
+	if(RS232_OpenComport(cportnumber, bdrate)){
+		printf("Can not open comport\n");
+		return 0;
+	}
 
+	return 1;
+}
 
-  if(RS232_OpenComport(cport_nr, bdrate))
-  {
-    printf("Can not open comport\n");
+int ProcessInput(){
+	int i;
 
-    return(0);
-  }
+	for(i=0; i < buffersize; i++){
+		unsigned short temp = (unsigned short) buf[i];
+		fprintf(logfile, "%d", temp);
+	}
 
-  while(1)
-  {
-    n = RS232_PollComport(cport_nr, buf, 4095);
+	return 0;
+}
 
-    if(n > 0)
-    {
-      buf[n] = 0;   /* always put a "null" at the end of a string! */
+int main(){
+//	ConnectSerialPort();
+	OpenFile();
+	char userinput = '!';
 
-      for(i=0; i < n; i++)
-      {
-        if(buf[i] < 32)  /* replace unreadable control-codes by dots */
-        {
-          buf[i] = '.';
-        }
-      }
-      RS232_SendBuf(cport_nr, buf, 4095);
-      printf("received %i bytes: %s\n", n, (char *)buf);
-    }
+	while(1){
+		scanf("%c",&userinput);
+		if(userinput == 'x' || userinput == 'c'){
+			break;
+		}
+		buffersize = RS232_PollComport(cportnumber, buf, 4095);
+		if(buffersize > 0){
+			buf[buffersize] = 0;
+			ProcessInput();
+			//RS232_SendBuf(cportnumber, buf, 4095);
+			//printf("received %i bytes: %s\n", buffersize, (char *)buf);
+		}
+		usleep(100000);  /* sleep for 100 milliSeconds */
+	}
 
-#ifdef _WIN32
-    Sleep(100);
-#else
-    usleep(100000);  /* sleep for 100 milliSeconds */
-#endif
-  }
-
-  return(0);
+	return 0 ;
 }
 
