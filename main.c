@@ -64,69 +64,69 @@ int ProcessInput(){
 
 	for(i=0; i < buffersize; i++){
 		unsigned short temp = (unsigned short) buf[i];
-		fprintf(logfile, "%d\n", temp);
+	//	fprintf(logfile, "%d\n", temp);
 		printf("%d\n", temp);
 		switch(typeinput){
 			case 0:
 				if(temp == 85){
 					typeinput++;
+					fprintf(logfile, "%d ",samplenumber);
+					samplenumber++;
 				}
-				fprintf(logfile, "%d ",samplenumber);
-				samplenumber++;
 				break;
 
 			case 1:
-				fprintf(logfile, "%d ",temp);
+				fprintf(logfile, "%d ",typeinput);
 				typeinput++;
 				break;
 
 			case 2:
-				fprintf(logfile, "%d ",temp);
+				fprintf(logfile, "%d ",typeinput);
 				typeinput++;
 				break;
 
 			case 3:
-				fprintf(logfile, "%d ",temp);
+				fprintf(logfile, "%d ",typeinput);
 				typeinput++;
 				break;
 
 			case 4:
-				fprintf(logfile, "%d ",temp);
+				fprintf(logfile, "%d ",typeinput);
 				typeinput++;
 				break;
 
 			case 5:
-				fprintf(logfile, "%d ",temp);
+				fprintf(logfile, "%d ",typeinput);
 				typeinput++;
 				break;
 
 			case 6:
-				fprintf(logfile, "%d ",temp);
+				fprintf(logfile, "%d ",typeinput);
 				typeinput++;
 				break;
 
 			case 7:
-				fprintf(logfile, "%d ",temp);
+				fprintf(logfile, "%d ",typeinput);
 				typeinput++;
 				break;
 
 			case 8:
-				fprintf(logfile, "%d ",temp);
+				fprintf(logfile, "%d ",typeinput);
 				typeinput++;
 				break;
 
 			case 9:
-				fprintf(logfile, "%d ",temp);
+				fprintf(logfile, "%d ",typeinput);
 				typeinput++;
 				break;
 
 			case 10:
-				fprintf(logfile, "%d ",temp);
+				fprintf(logfile, "%d ",typeinput);
 				typeinput++;
 				break;
 
 			case 11:
-				fprintf(logfile, "%d \n",temp);
+				fprintf(logfile, "%d \n",typeinput);
 				typeinput = 0;
 				break;
 		}
@@ -153,7 +153,6 @@ int main(){
 			break;
 		}
 		printf("Polling comport...\n");
-		fprintf(logfile, "Polling comport...\n");
 		buffersize = RS232_PollComport(cportnumber, buf, 4095);
 		if(buffersize > 0){
 			buf[buffersize] = 0;
