@@ -71,6 +71,8 @@ int ProcessInput(){
 			case 0:
 				if(inputbyte == 85){
 					typeinput++;
+					fprintf(logfile, "%d ",samplenumber);
+					samplenumber++;
 				}
 				fprintf(logfile, "%d ",samplenumber);
 				break;
@@ -165,7 +167,6 @@ int main(){
 			break;
 		}
 		printf("Polling comport...\n");
-		fprintf(logfile, "Polling comport...\n");
 		buffersize = RS232_PollComport(cportnumber, buf, 4095);
 		if(buffersize > 0){
 			buf[buffersize] = 0;
