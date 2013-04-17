@@ -65,13 +65,13 @@ int ProcessInput(){
 	for(i=0; i < buffersize; i++){
 		unsigned short inputbyte = (unsigned short) buf[i];
 		int measurement;
-	//	fprintf(logfile, "%d\n", inputbyte);
+		fprintf(logfile, "Raw data: %d\n", inputbyte);
 		printf("%d\n", inputbyte);
 		switch(typeinput){
 			case 0:
 				if(inputbyte == 85){
 					typeinput++;
-					fprintf(logfile, "Sample Number %d\n ",samplenumber);
+					fprintf(logfile, "Sample Number: %d\n ",samplenumber);
 				}
 				break;
 
@@ -83,7 +83,7 @@ int ProcessInput(){
 			case 2:
 				measurement = measurement || inputbyte;
 				Samples[samplenumber].xaccel = measurement;
-				fprintf(logfile, "Xaccel %d\n ",Samples[samplenumber].xaccel);
+				fprintf(logfile, "Xaccel: %d\n ",Samples[samplenumber].xaccel);
 				typeinput++;
 				break;
 
@@ -94,7 +94,7 @@ int ProcessInput(){
 
 			case 4:
 				Samples[samplenumber].yaccel = measurement;
-				fprintf(logfile, "Yaccel %d\n ",Samples[samplenumber].yaccel);
+				fprintf(logfile, "Yaccel: %d\n ",Samples[samplenumber].yaccel);
 				typeinput++;
 				break;
 
@@ -105,7 +105,7 @@ int ProcessInput(){
 
 			case 6:
 				Samples[samplenumber].zaccel = measurement;
-				fprintf(logfile, "Zaccel %d\n",Samples[samplenumber].zaccel);
+				fprintf(logfile, "Zaccel: %d\n",Samples[samplenumber].zaccel);
 				typeinput++;
 				break;
 
@@ -116,7 +116,7 @@ int ProcessInput(){
 
 			case 8:
 				Samples[samplenumber].xrot = measurement;
-				fprintf(logfile, "Xrot %d\n ",Samples[samplenumber].xrot);
+				fprintf(logfile, "Xrot: %d\n ",Samples[samplenumber].xrot);
 				typeinput++;
 				break;
 
@@ -127,7 +127,7 @@ int ProcessInput(){
 
 			case 10:
 				Samples[samplenumber].yrot = measurement;
-				fprintf(logfile, "Yrot %d\n ",Samples[samplenumber].yrot);
+				fprintf(logfile, "Yrot: %d\n ",Samples[samplenumber].yrot);
 				typeinput++;
 				break;
 
@@ -138,7 +138,7 @@ int ProcessInput(){
 
 			case 12:
 				Samples[samplenumber].zrot = measurement;
-				fprintf(logfile, "Zrot %d\n",Samples[samplenumber].zrot);
+				fprintf(logfile, "Zrot: %d\n",Samples[samplenumber].zrot);
 				typeinput = 0;
 				if(samplenumber < 999){
 					samplenumber++;
