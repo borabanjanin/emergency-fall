@@ -63,8 +63,8 @@ int ProcessInput(){
 	int i;
 
 	for(i=0; i < buffersize; i++){
-		unsigned short inputbyte = (unsigned short) buf[i];
-		unsigned int measurement;
+		short inputbyte =  (short) buf[i];
+		int measurement;
 		fprintf(logfile, "Raw data: %d\n", inputbyte);
 		printf("%d\n", inputbyte);
 		switch(typeinput){
@@ -77,35 +77,41 @@ int ProcessInput(){
 
 			case 1:
 				measurement = inputbyte << 8;
-				fprintf(logfile, "Measurement: %i\n", measurement);
+				fprintf(logfile, "Inputbyte: %i\n", inputbyte);
 				typeinput++;
 				break;
 
 			case 2:
 				measurement |= inputbyte;
 				Samples[samplenumber].xaccel = measurement;
-				fprintf(logfile, "Measurement value: %i\n", measurement);
+				fprintf(logfile, "Inputbyte value: %i\n", measurement);
 				fprintf(logfile, "Xaccel: %d\n ",Samples[samplenumber].xaccel);
 				typeinput++;
 				break;
 
 			case 3:
 				measurement = inputbyte << 8;
+				fprintf(logfile, "Inputbyte: %i\n", inputbyte);
 				typeinput++;
 				break;
 
 			case 4:
+				measurement |= inputbyte;
 				Samples[samplenumber].yaccel = measurement;
+				fprintf(logfile, "Inputbyte value: %i\n", measurement);
 				fprintf(logfile, "Yaccel: %d\n ",Samples[samplenumber].yaccel);
 				typeinput++;
 				break;
 
 			case 5:
 				measurement = inputbyte << 8;
+				fprintf(logfile, "Inputbyte value: %i\n", measurement);
 				typeinput++;
 				break;
 
 			case 6:
+				measurement |= inputbyte;
+				fprintf(logfile, "Inputbyte value: %i\n", measurement);
 				Samples[samplenumber].zaccel = measurement;
 				fprintf(logfile, "Zaccel: %d\n",Samples[samplenumber].zaccel);
 				typeinput++;
@@ -113,10 +119,13 @@ int ProcessInput(){
 
 			case 7:
 				measurement = inputbyte << 8;
+				fprintf(logfile, "Inputbyte value: %i\n", measurement);
 				typeinput++;
 				break;
 
 			case 8:
+				measurement |= inputbyte;
+				fprintf(logfile, "Inputbyte value: %i\n", measurement);
 				Samples[samplenumber].xrot = measurement;
 				fprintf(logfile, "Xrot: %d\n ",Samples[samplenumber].xrot);
 				typeinput++;
@@ -124,21 +133,27 @@ int ProcessInput(){
 
 			case 9:
 				measurement = inputbyte << 8;
+				fprintf(logfile, "Inputbyte value: %i\n", measurement);
 				typeinput++;
 				break;
 
 			case 10:
+				measurement |= inputbyte;
+				fprintf(logfile, "Inputbyte value: %i\n", measurement);
 				Samples[samplenumber].yrot = measurement;
 				fprintf(logfile, "Yrot: %d\n ",Samples[samplenumber].yrot);
 				typeinput++;
 				break;
 
 			case 11:
+				fprintf(logfile, "Inputbyte value: %i\n", measurement);
 				measurement = inputbyte << 8;
 				typeinput++;
 				break;
 
 			case 12:
+				fprintf(logfile, "Inputbyte value: %i\n", measurement);
+				measurement |= inputbyte;
 				Samples[samplenumber].zrot = measurement;
 				fprintf(logfile, "Zrot: %d\n",Samples[samplenumber].zrot);
 				typeinput = 0;
