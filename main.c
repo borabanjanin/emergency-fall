@@ -64,7 +64,7 @@ int ProcessInput(){
 
 	for(i=0; i < buffersize; i++){
 		unsigned short inputbyte = (unsigned short) buf[i];
-		int measurement;
+		unsigned int measurement;
 		fprintf(logfile, "Raw data: %d\n", inputbyte);
 		printf("%d\n", inputbyte);
 		switch(typeinput){
@@ -77,12 +77,14 @@ int ProcessInput(){
 
 			case 1:
 				measurement = inputbyte << 8;
+				fprintf(logfile, "Measurement: %i\n", measurement);
 				typeinput++;
 				break;
 
 			case 2:
-				measurement = measurement || inputbyte;
+				measurement |= inputbyte;
 				Samples[samplenumber].xaccel = measurement;
+				fprintf(logfile, "Measurement value: %i\n", measurement);
 				fprintf(logfile, "Xaccel: %d\n ",Samples[samplenumber].xaccel);
 				typeinput++;
 				break;
