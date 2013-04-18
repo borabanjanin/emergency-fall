@@ -63,8 +63,11 @@ int ProcessInput(){
 	int i;
 
 	for(i=0; i < buffersize; i++){
-		short inputbyte =  (short) buf[i];
-		int measurement;
+		signed short inputbyte =  buf[i];
+		signed int measurement;
+
+		printf("%d\n", inputbyte);
+
 		switch(typeinput){
 			case 0:
 				if(inputbyte == 85){
