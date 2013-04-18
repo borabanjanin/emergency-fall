@@ -65,13 +65,12 @@ int ProcessInput(){
 	for(i=0; i < buffersize; i++){
 		short inputbyte =  (short) buf[i];
 		int measurement;
-		fprintf(logfile, "Raw data: %d\n", inputbyte);
-		printf("%d\n", inputbyte);
 		switch(typeinput){
 			case 0:
 				if(inputbyte == 85){
 					typeinput++;
 					fprintf(logfile, "Sample Number: %d\n ",samplenumber);
+					printf("Sample Number: %d\n ",samplenumber);
 				}
 				break;
 
@@ -84,6 +83,7 @@ int ProcessInput(){
 				measurement |= inputbyte;
 				Samples[samplenumber].xaccel = measurement;
 				fprintf(logfile, "Xaccel: %d\n ",Samples[samplenumber].xaccel);
+				printf("Xaccel: %d\n ",Samples[samplenumber].xaccel);
 				typeinput++;
 				break;
 
@@ -96,12 +96,12 @@ int ProcessInput(){
 				measurement |= inputbyte;
 				Samples[samplenumber].yaccel = measurement;
 				fprintf(logfile, "Yaccel: %d\n ",Samples[samplenumber].yaccel);
+				printf("Yaccel: %d\n ",Samples[samplenumber].yaccel);
 				typeinput++;
 				break;
 
 			case 5:
 				measurement = inputbyte << 8;
-				fprintf(logfile, "Inputbyte value: %i\n", measurement);
 				typeinput++;
 				break;
 
@@ -109,6 +109,7 @@ int ProcessInput(){
 				measurement |= inputbyte;
 				Samples[samplenumber].zaccel = measurement;
 				fprintf(logfile, "Zaccel: %d\n",Samples[samplenumber].zaccel);
+				printf("Zaccel: %d\n",Samples[samplenumber].zaccel);
 				typeinput++;
 				break;
 
@@ -121,6 +122,7 @@ int ProcessInput(){
 				measurement |= inputbyte;
 				Samples[samplenumber].xrot = measurement;
 				fprintf(logfile, "Xrot: %d\n ",Samples[samplenumber].xrot);
+				printf("Xrot: %d\n ",Samples[samplenumber].xrot);
 				typeinput++;
 				break;
 
@@ -133,6 +135,7 @@ int ProcessInput(){
 				measurement |= inputbyte;
 				Samples[samplenumber].yrot = measurement;
 				fprintf(logfile, "Yrot: %d\n ",Samples[samplenumber].yrot);
+				printf("Yrot: %d\n ",Samples[samplenumber].yrot);
 				typeinput++;
 				break;
 
@@ -145,6 +148,7 @@ int ProcessInput(){
 				measurement |= inputbyte;
 				Samples[samplenumber].zrot = measurement;
 				fprintf(logfile, "Zrot: %d\n",Samples[samplenumber].zrot);
+				printf("Zrot: %d\n",Samples[samplenumber].zrot);
 				typeinput = 0;
 				if(samplenumber < 999){
 					samplenumber++;
