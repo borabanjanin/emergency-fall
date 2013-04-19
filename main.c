@@ -141,6 +141,7 @@ int ProcessInput(){
 				fprintf(logfile, "%d\n",Samples[samplenumber].zrot);
 				printf("%d\n",Samples[samplenumber].zrot);
 				typeinput = 0;
+				ProcessData();
 				if(samplenumber < 999){
 					samplenumber++;
 				}else{
