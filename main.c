@@ -66,8 +66,6 @@ int ProcessInput(){
 		signed short inputbyte =  buf[i];
 		signed short measurement;
 
-//		printf("%d\n", inputbyte);
-
 		switch(typeinput){
 			case 0:
 				if(inputbyte == 85){
@@ -162,6 +160,12 @@ int ProcessInput(){
 		}
 	}
 
+	return 0;
+}
+
+int ProcessData(){
+
+	
 	return 0;
 }
 
