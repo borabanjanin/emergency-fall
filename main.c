@@ -11,25 +11,15 @@
  ***********************************************/
 
 #include "rs232.h"
-
-typedef struct Sample{
-	unsigned short n;
-	int xaccel;
-	int yaccel;
-	int zaccel;
-	int xrot;
-	int yrot;
-	int zrot;
-
-}Sample;
+#include "main.h"
 
 unsigned char buf[4096];
 int cportnumber=22;
 int bdrate=9600;
 int buffersize = 0;
-short samplenumber = 0;
-short typeinput = 0;
-Sample Samples[1000];
+
+
+
 FILE *logfile;
 
 FILE* OpenFile(){
@@ -163,11 +153,6 @@ int ProcessInput(){
 	return 0;
 }
 
-int ProcessData(){
-
-	
-	return 0;
-}
 
 int main(){
 	ConnectSerialPort();
