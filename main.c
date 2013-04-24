@@ -122,22 +122,22 @@ int ProcessInput(){
 
 int main(){
 	ConnectSerialPort();
-	OpenFile();
-	printf("Opened log file\n");
+//	OpenFile();
+//	printf("Opened log file\n");
 	char userinput = '!';
 
 	while(1){
 	//	if(){
-			scanf("%c",&userinput);
+//			scanf("%c",&userinput);
 	//	}
 
-		if(userinput == 'x' || userinput == 'c'){
-			printf("Closing logfile...\n");
-			fclose(logfile);
-			printf("Logfile closed\n");
-			break;
-		}
-		printf("Polling comport...\n");
+//		if(userinput == 'x' || userinput == 'c'){
+//			printf("Closing logfile...\n");
+//			fclose(logfile);
+//			printf("Logfile closed\n");
+//			break;
+//		}
+//		printf("Polling comport...\n");
 		buffersize = RS232_PollComport(cportnumber, buf, 4095);
 		if(buffersize > 0){
 			buf[buffersize] = 0;
