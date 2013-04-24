@@ -50,6 +50,55 @@ int ConnectSerialPort(){
 	return 0;
 }
 
+int StoreInput(signed int measurement){
+		switch(typeinput){
+			case 0:
+				Samples[samplenumber].n = measurement;
+				break;
+			case 1:
+				break;
+			case 2:	
+				Samples[samplenumber].xaccel = measurement;
+				break;
+			case 3:
+				break;
+			case 4:
+				Samples[samplenumber].yaccel = measurement;
+				break;
+			case 5:
+				break;
+			case 6:
+				Samples[samplenumber].zaccel = measurement;
+				break;
+			case 7:
+				break;
+			case 8:
+				Samples[samplenumber].xrot = measurement;
+				break;
+			case 9:
+				break;
+			case 10:
+				Samples[samplenumber].yrot = measurement;
+				break;
+			case 11:
+				break;
+			case 12:
+				Samples[samplenumber].zrot = measurement;
+				break;
+			case 13:
+				if(samplenumber>0){
+					printf("%i ",Samples[samplenumber].xaccel - Samples[samplenumber-1].xaccel);
+					printf("%i ",Samples[samplenumber].yaccel - Samples[samplenumber-1].yaccel);
+					printf("%i ",Samples[samplenumber].zaccel - Samples[samplenumber-1].zaccel);
+					printf("%i ",Samples[samplenumber].xrot - Samples[samplenumber-1].xrot);
+					printf("%i ",Samples[samplenumber].yrot - Samples[samplenumber-1].yrot);						
+					printf("%i ",Samples[samplenumber].zrot - Samples[samplenumber-1].zrot);
+				}
+				break;
+		}
+}
+
+
 int ProcessInput(){
 	int i;
 	signed int measurement;
@@ -62,51 +111,21 @@ int ProcessInput(){
 			}
 		}else if(typeinput == 1 || typeinput == 3 || typeinput == 5 || typeinput == 7 || typeinput == 9 || typeinput == 11){
 			measurement = inputbyte & 0x000000FF;
-//			printf("inputbyte: %i \n",inputbyte);
 			typeinput++;
 		}else if(typeinput == 2 || typeinput == 4 || typeinput == 6 || typeinput == 8 || typeinput == 10 || typeinput == 12){
 			measurement |= (inputbyte & 0x000000FF) << 8;
 			if(sign_exten_mask & measurement){
 				measurement |= 0xFFFF0000;
 			}
+			StoreInput(measurement);
 			typeinput++;
-//			printf("inputbye2: %i \n",inputbyte);
 			printf("%i ", measurement);
 		}		
 		if(typeinput == 13){
+			StoreInput(measurement);
 			printf("\n");
 		}
-		switch(typeinput){
-			case 0:
-				break;
-			case 1:
-				break;
-			case 2:
-				break;
-			case 3:
-				break;
-			case 4:
-				break;
-			case 5:
-				break;
-			case 6:
-				break;
-			case 7:
-				break;
-			case 8:
-				break;
-			case 9:
-				break;
-			case 10:
-				break;
-			case 11:
-				break;
-			case 12:
-				break;
-			case 13:
-				break;
-		}
-			
+	
 				
 		if(samplenumber < 999){
 				samplenumber++;
