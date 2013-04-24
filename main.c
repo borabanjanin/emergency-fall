@@ -119,7 +119,6 @@ int ProcessInput(){
 			}
 			StoreInput(measurement);
 			typeinput++;
-			printf("%i ", measurement);
 		}		
 		if(typeinput == 13){
 			StoreInput(measurement);
