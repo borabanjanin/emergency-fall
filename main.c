@@ -100,13 +100,14 @@ int ProcessInput(){
 		char inputbyte =  buf[i];
 		if(typeinput == 0 || typeinput == 13){
 			if(inputbyte == 85){
+				printf("%i ", inputbyte);
 				typeinput = 1;
 			}
 		}else if(typeinput == 1 || typeinput == 3 || typeinput == 5 || typeinput == 7 || typeinput == 9 || typeinput == 11){
-			measurement = inputbyte & 0x000000FF;
+			measurement = (inputbyte & 0x000000FF) << 8;
 			typeinput++;
 		}else if(typeinput == 2 || typeinput == 4 || typeinput == 6 || typeinput == 8 || typeinput == 10 || typeinput == 12){
-			measurement |= (inputbyte & 0x000000FF) << 8;
+			measurement |= inputbyte & 0x000000FF;
 			if(sign_exten_mask & measurement){
 				measurement |= 0xFFFF0000;
 			}
