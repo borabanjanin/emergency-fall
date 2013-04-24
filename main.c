@@ -56,21 +56,53 @@ int ProcessInput(){
 	for(i=0; i < buffersize; i++){
 		char inputbyte =  buf[i];
 
-			if(typeinput == 0){
-				if(inputbyte == 85){
-					typeinput++;
-					samplenumber++;
-				}
-			}else if(typeinput == 1 || typeinput == 3 || typeinput == 5 || typeinput == 7 || typeinput == 9 || typeinput == 11){
-				measurement = inputbyte & 0x000000FF;
+		if(typeinput == 13){
+			if(inputbyte == 85){
 				typeinput++;
-			}else if(typeinput == 2 || typeinput == 4 || typeinput == 6 || typeinput == 8 || typeinput == 10 || typeinput == 12){
-				measurement |= (inputbyte & 0x000000FF) << 8;
-				if(sign_exten_mask & measurement){
-					measurement |= 0xFFFF0000;
-				}
-				typeinput++;
-			}			
+			}
+		}else if(typeinput == 1 || typeinput == 3 || typeinput == 5 || typeinput == 7 || typeinput == 9 || typeinput == 11){
+			measurement = inputbyte & 0x000000FF;
+			typeinput++;
+		}else if(typeinput == 2 || typeinput == 4 || typeinput == 6 || typeinput == 8 || typeinput == 10 || typeinput == 12){
+			measurement |= (inputbyte & 0x000000FF) << 8;
+			if(sign_exten_mask & measurement){
+				measurement |= 0xFFFF0000;
+			}
+			typeinput++;
+			printf("%i ", measurement);
+		}		
+		if(typeinput == 13){
+			printf("/n");
+		}
+		switch(typeinput){
+			case 0:
+				break;
+			case 1:
+				break;
+			case 2:
+				break;
+			case 3:
+				break;
+			case 4:
+				break;
+			case 5:
+				break;
+			case 6:
+				break;
+			case 7:
+				break;
+			case 8:
+				break;
+			case 9:
+				break;
+			case 10:
+				break;
+			case 11:
+				break;
+			case 12:
+				break;
+		}
+			
 				
 		if(samplenumber < 999){
 				samplenumber++;
