@@ -1,5 +1,5 @@
 typedef struct Sample{
-	unsigned short
+	unsigned short n;
 	int xaccel;
 	int yaccel;
 	int zaccel;
