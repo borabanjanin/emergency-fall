@@ -1,3 +1,4 @@
+
 /***********************************************
  ***********************************************
  *Emergency Fall Detection Source Code
@@ -55,13 +56,13 @@ int ProcessInput(){
 	signed int sign_exten_mask = 0x00008000;
 	for(i=0; i < buffersize; i++){
 		char inputbyte =  buf[i];
-
-		if(typeinput == 13){
+		if(typeinput == 0 || typeinput == 13){
 			if(inputbyte == 85){
-				typeinput++;
+				typeinput = 1;
 			}
 		}else if(typeinput == 1 || typeinput == 3 || typeinput == 5 || typeinput == 7 || typeinput == 9 || typeinput == 11){
 			measurement = inputbyte & 0x000000FF;
+//			printf("inputbyte: %i \n",inputbyte);
 			typeinput++;
 		}else if(typeinput == 2 || typeinput == 4 || typeinput == 6 || typeinput == 8 || typeinput == 10 || typeinput == 12){
 			measurement |= (inputbyte & 0x000000FF) << 8;
@@ -69,10 +70,11 @@ int ProcessInput(){
 				measurement |= 0xFFFF0000;
 			}
 			typeinput++;
+//			printf("inputbye2: %i \n",inputbyte);
 			printf("%i ", measurement);
 		}		
 		if(typeinput == 13){
-			printf("/n");
+			printf("\n");
 		}
 		switch(typeinput){
 			case 0:
@@ -100,6 +102,8 @@ int ProcessInput(){
 			case 11:
 				break;
 			case 12:
+				break;
+			case 13:
 				break;
 		}
 			
