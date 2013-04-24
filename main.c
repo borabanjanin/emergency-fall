@@ -55,13 +55,17 @@ int ProcessInput(){
 	signed int sign_exten_mask = 0x00008000;
 	for(i=0; i < buffersize; i++){
 		char inputbyte =  buf[i];
-		
+		if(typeinput){
+			printf("%i ",inputbyte);
+		}else{
+			printf("\n");
+		}	
 		switch(typeinput){
 			case 0:
 				if(inputbyte == 85){
 					typeinput++;
-					fprintf(logfile, "%d ",samplenumber);
-					printf("%d ",samplenumber);
+//					fprintf(logfile, "%d ",samplenumber);
+//					printf("%d ",samplenumber);
 					Samples[samplenumber].n = samplenumber;
 				}
 				break;
@@ -77,8 +81,8 @@ int ProcessInput(){
 					measurement |= 0xFFFF0000;
 				}
 				Samples[samplenumber].xaccel = measurement;
-				fprintf(logfile,"%d ",Samples[samplenumber].xaccel);
-				printf("%d ",Samples[samplenumber].xaccel);
+//				fprintf(logfile,"%d ",Samples[samplenumber].xaccel);
+//				printf("%d ",Samples[samplenumber].xaccel);
 				typeinput++;
 				break;
 
@@ -93,8 +97,8 @@ int ProcessInput(){
 					measurement |= 0xFFFF0000;
 				}
 				Samples[samplenumber].yaccel = measurement;
-				fprintf(logfile,"%d ",Samples[samplenumber].yaccel);
-				printf("%d ",Samples[samplenumber].yaccel);
+//				fprintf(logfile,"%d ",Samples[samplenumber].yaccel);
+//				printf("%d ",Samples[samplenumber].yaccel);
 				typeinput++;
 				break;
 
@@ -109,8 +113,8 @@ int ProcessInput(){
 					measurement |= 0xFFFF0000;
 				}
 				Samples[samplenumber].zaccel = measurement;
-				fprintf(logfile,"%d ",Samples[samplenumber].zaccel);
-				printf("%d ",Samples[samplenumber].zaccel);
+//				fprintf(logfile,"%d ",Samples[samplenumber].zaccel);
+//				printf("%d ",Samples[samplenumber].zaccel);
 				typeinput++;
 				break;
 
@@ -125,8 +129,8 @@ int ProcessInput(){
 					measurement |= 0xFFFF0000;
 				}
 				Samples[samplenumber].xrot = measurement;
-				fprintf(logfile,"%d ",Samples[samplenumber].xrot);
-				printf("%d ",Samples[samplenumber].xrot);
+//				fprintf(logfile,"%d ",Samples[samplenumber].xrot);
+//				printf("%d ",Samples[samplenumber].xrot);
 				typeinput++;
 				break;
 
@@ -141,8 +145,8 @@ int ProcessInput(){
 					measurement |= 0xFFFF0000;
 				}
 				Samples[samplenumber].yrot = measurement;
-				fprintf(logfile,"%d ",Samples[samplenumber].yrot);
-				printf("%d ",Samples[samplenumber].yrot);
+//				fprintf(logfile,"%d ",Samples[samplenumber].yrot);
+//				printf("%d ",Samples[samplenumber].yrot);
 				typeinput++;
 				break;
 
@@ -157,8 +161,8 @@ int ProcessInput(){
 					measurement |= 0xFFFF0000;
 				}
 				Samples[samplenumber].zrot = measurement;
-				fprintf(logfile,"%d ",Samples[samplenumber].zrot);
-				printf("%d ",Samples[samplenumber].zrot);
+//				fprintf(logfile,"%d ",Samples[samplenumber].zrot);
+//				printf("%d ",Samples[samplenumber].zrot);
 				typeinput = 0;
 				ProcessData();
 				if(samplenumber < 999){
