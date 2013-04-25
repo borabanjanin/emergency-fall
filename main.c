@@ -86,7 +86,14 @@ int StoreInput(signed int measurement){
 				Samples[samplenumber].zrot = measurement;
 				break;
 			case 13:
-
+				if(samplenumber>1){
+					printf("%i",Samples[samplenumber].xaccel - Samples[samplenumber-1].xaccel);
+					printf("%i",Samples[samplenumber].yaccel - Samples[samplenumber-1].yaccel);
+					printf("%i",Samples[samplenumber].zaccel - Samples[samplenumber-1].zaccel);
+					printf("%i",Samples[samplenumber].xrot - Samples[samplenumber-1].xrot);
+					printf("%i",Samples[samplenumber].yrot - Samples[samplenumber-1].yrot);					
+					printf("%i",Samples[samplenumber].zrot - Samples[samplenumber-1].zrot);
+				}
 				break;
 		}
 }
