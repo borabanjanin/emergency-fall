@@ -87,12 +87,12 @@ int StoreInput(signed int measurement){
 				break;
 			case 13:
 				if(samplenumber>1){
-					printf("%i",Samples[samplenumber].xaccel - Samples[samplenumber-1].xaccel);
-					printf("%i",Samples[samplenumber].yaccel - Samples[samplenumber-1].yaccel);
-					printf("%i",Samples[samplenumber].zaccel - Samples[samplenumber-1].zaccel);
-					printf("%i",Samples[samplenumber].xrot - Samples[samplenumber-1].xrot);
-					printf("%i",Samples[samplenumber].yrot - Samples[samplenumber-1].yrot);					
-					printf("%i",Samples[samplenumber].zrot - Samples[samplenumber-1].zrot);
+					printf("%i ",Samples[samplenumber].xaccel - Samples[samplenumber-1].xaccel);
+					printf("%i ",Samples[samplenumber].yaccel - Samples[samplenumber-1].yaccel);
+					printf("%i ",Samples[samplenumber].zaccel - Samples[samplenumber-1].zaccel);
+					printf("%i ",Samples[samplenumber].xrot - Samples[samplenumber-1].xrot);
+					printf("%i ",Samples[samplenumber].yrot - Samples[samplenumber-1].yrot);					
+					printf("%i ",Samples[samplenumber].zrot - Samples[samplenumber-1].zrot);
 				}
 				break;
 		}
@@ -107,8 +107,12 @@ int ProcessInput(){
 		char inputbyte =  buf[i];
 		if(typeinput == 0 || typeinput == 13){
 			if(inputbyte == 85){
-				printf("%i ", inputbyte);
 				typeinput = 1;
+			}
+			if(samplenumber > 999){
+				samplenumber = 0;	
+			}else{
+				samplenumber++;
 			}
 		}else if(typeinput == 1 || typeinput == 3 || typeinput == 5 || typeinput == 7 || typeinput == 9 || typeinput == 11){
 			measurement = (inputbyte & 0x000000FF) << 8;
@@ -119,19 +123,12 @@ int ProcessInput(){
 				measurement |= 0xFFFF0000;
 			}
 			StoreInput(measurement);
-			printf("%i ",measurement);
 			typeinput++;
 		}		
 		if(typeinput == 13){
+			printf("\n");
 			StoreInput(measurement);
 			printf("\n");
-		}
-	
-				
-		if(samplenumber < 999){
-				samplenumber++;
-		}else{
-				samplenumber = 0;
 		}
 
 	}
