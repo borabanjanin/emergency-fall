@@ -139,6 +139,15 @@ int ProcessInput(){
 	return 0;
 }
 
+void my_handler(int s){
+	gnuplot_close(plot_handle);
+//			printf("Closing logfile...\n");
+//			fclose(logfile);
+//			printf("Logfile closed\n");
+    printf("exiting %d\n",s);
+    exit(1);
+}
+
 
 int main(){
 	ConnectSerialPort();
@@ -146,10 +155,15 @@ int main(){
 //	OpenFile();
 //	printf("Opened log file\n");
 	char userinput = '!';
+	struct sigaction SIGINTHANDLER;
+	SIGINTHANDLER.sa_handler = my_handler;
+	sigemptyset(&SIGINTHANDLER.sa_mask);
+	SIGINTHANDLER.sa_flags = 0;
+	sigaction(SIGINT, &SIGINTHANDLER, NULL);
 
 	while(1){
 	//	if(){
-			scanf("%c",&userinput);
+//			scanf("%c",&userinput);
 	//	}
 
 		if(userinput == 'x' || userinput == 'c'){

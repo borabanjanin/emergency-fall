@@ -1,4 +1,7 @@
 #include "gnuplot_i.h"
+#include <signal.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 typedef struct Sample{
 	unsigned short n;
