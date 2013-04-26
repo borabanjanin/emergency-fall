@@ -12,3 +12,6 @@ clean: rs232.c main.c
 
 gnuplot_i.o: gnuplot_i.c
 	gcc -c gnuplot_i.c
+
+clean: 
+	rm -rf *.o
