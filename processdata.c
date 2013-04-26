@@ -19,8 +19,7 @@ double ProcessData(){
 	yaccelsq = pow(yaccelsq,2.0);
 	zaccelsq = pow(zaccelsq,2.0);
 	accel_array[samplenumber] = sqrt(xaccelsq + yaccelsq + zaccelsq);
-	//fprintf(logfile,"Acceleration: %f\n",accel_array[samplenumber]);
-	return accel;
+	return accel_array[samplenumber];
 }
 
 

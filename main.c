@@ -129,7 +129,8 @@ int ProcessInput(){
 			printf("\n");
 			StoreInput(measurement);
 			double accel = ProcessData();
-			GraphData(0, accel);
+			printf("\n%f\n",accel);
+			//GraphData(0, accel);
 			printf("\n");
 		}
 
