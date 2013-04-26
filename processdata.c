@@ -25,10 +25,10 @@ double ProcessData(){
 
 int GraphData(int sensor_id, double accel){
 	if(sensor_id == 0){
-		accel_chest[chest_sample] = accel;
-		gnuplot_resetplot(plot_handle);
-		gnuplot_plot_x(plot_handle, accel_chest, chest_sample, "test");
-		if(chest_sample >= 10){
+		accel_chest[chest_sample] = accel/16000;
+		if(chest_sample >= 9){
+			gnuplot_resetplot(plot_handle);
+			gnuplot_plot_x(plot_handle, accel_chest, chest_sample, "test");
 			chest_sample = 0;
 		}else{
 			chest_sample++;
