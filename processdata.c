@@ -1,18 +1,48 @@
 #ifndef PROCESSDATA
 #define PROCESSDATA
 #include <math.h>
+#include "gnuplot_i.h"
 
-int ProcessData(){
-	double xaccel_squar = (double) Samples[samplenumber].xaccel;
-	double yaccel_squar = (double) Samples[samplenumber].yaccel;
-	double zaccel_squar = (double) Samples[samplenumber].zaccel;
+double accel_chest[10];
+double accel_thigh[10];
+int chest_sample = 0;
+int thigh_sample = 0;
+extern gnuplot_ctrl * plot_handle;
+
+double ProcessData(){
+	double xaccelsq = (double) Samples[samplenumber].xaccel;
+	double yaccelsq = (double) Samples[samplenumber].yaccel;
+	double zaccelsq = (double) Samples[samplenumber].zaccel;
 	double accel;
 
-	xaccel_squar = pow(xaccel_squar,2.0);
-	yaccel_squar = pow(yaccel_squar,2.0);
-	zaccel_squar = pow(zaccel_squar,2.0);
-	accel_array[samplenumber] = sqrt(xaccel_squar + yaccel_squar + zaccel_squar);
+	xaccelsq = pow(xaccelsq,2.0);
+	yaccelsq = pow(yaccelsq,2.0);
+	zaccelsq = pow(zaccelsq,2.0);
+	accel_array[samplenumber] = sqrt(xaccelsq + yaccelsq + zaccelsq);
 	fprintf(logfile,"Acceleration: %f\n",accel_array[samplenumber]);
+	return accel;
+}
+
+
+int GraphData(int sensor_id, double accel){
+	if(sensor_id == 0){
+		accel_chest[chest_sample] = accel;
+		gnuplot_plot_x(plot_handle, accel_chest, chest_sample, "test");
+		if(chest_sample >= 10){
+			chest_sample = 0;
+		}else{
+			chest_sample++;
+		}
+	}
+
+	if(sensor_id == 1){
+		accel_thigh[thigh_sample] = accel;
+		if(thigh_sample >= 10){
+			thigh_sample = 0;
+		}else{
+			thigh_sample++;
+		}
+	}
 	return 0;
 }
 

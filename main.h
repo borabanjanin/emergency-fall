@@ -1,3 +1,5 @@
+#include "gnuplot_i.h"
+
 typedef struct Sample{
 	unsigned short n;
 	int xaccel;
@@ -14,5 +16,7 @@ short typeinput = 0;
 Sample Samples[1000];
 double accel_array[1000];
 FILE *logfile;
+gnuplot_ctrl * plot_handle;
 
 #include "processdata.c"
+

@@ -1,4 +1,3 @@
-
 /***********************************************
  ***********************************************
  *Emergency Fall Detection Source Code
@@ -14,12 +13,11 @@
 #include "rs232.h"
 #include "main.h"
 
+#define CPORTNUMBER 22
+#define BDRATE 9600
+
 unsigned char buf[4096];
-int cportnumber=22;
-int bdrate=9600;
 int buffersize = 0;
-
-
 
 FILE *logfile;
 
@@ -42,7 +40,7 @@ FILE* OpenFile(){
 
 int ConnectSerialPort(){
 
-	if(RS232_OpenComport(cportnumber, bdrate)){
+	if(RS232_OpenComport(CPORTNUMBER, BDRATE)){
 		printf("Can not open comport\n");
 		return 1;
 	}
@@ -96,6 +94,8 @@ int StoreInput(signed int measurement){
 				}
 				break;
 		}
+
+		return 0;
 }
 
 
@@ -128,6 +128,8 @@ int ProcessInput(){
 		if(typeinput == 13){
 			printf("\n");
 			StoreInput(measurement);
+			double accel = ProcessData();
+			GraphData(0, accel);
 			printf("\n");
 		}
 
@@ -139,23 +141,25 @@ int ProcessInput(){
 
 int main(){
 	ConnectSerialPort();
+	plot_handle = gnuplot_init();
 //	OpenFile();
 //	printf("Opened log file\n");
 	char userinput = '!';
 
 	while(1){
 	//	if(){
-//			scanf("%c",&userinput);
+			scanf("%c",&userinput);
 	//	}
 
-//		if(userinput == 'x' || userinput == 'c'){
+		if(userinput == 'x' || userinput == 'c'){
 //			printf("Closing logfile...\n");
 //			fclose(logfile);
 //			printf("Logfile closed\n");
-//			break;
-//		}
-//		printf("Polling comport...\n");
-		buffersize = RS232_PollComport(cportnumber, buf, 4095);
+			gnuplot_close(plot_handle);
+			break;
+		}
+		printf("Polling comport...\n");
+		buffersize = RS232_PollComport(CPORTNUMBER, buf, 4095);
 		if(buffersize > 0){
 			buf[buffersize] = 0;
 			ProcessInput();
