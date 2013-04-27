@@ -119,10 +119,19 @@ int ProcessInput(){
 				chest_info.type_input = 1;
 				i++;
 			}
-			if(samplenumber > 999){
-				samplenumber = 0;	
+
+			if(packet_type == CHEST){
+				if(chest_info.sample_number < 999){
+					chest_info.sample_number++;
+				}else{
+					chest_info.sample_number = 0;
+				}
 			}else{
-				samplenumber++;
+				if(thigh_info.sample_number < 999){
+					thigh_info.sample_number++;
+				}else{
+					thigh_info.sample_number = 0;
+				}
 			}
 		}else if(typeinput == 1 || typeinput == 3 || typeinput == 5 || typeinput == 7 || typeinput == 9 || typeinput == 11){
 			measurement = (inputbyte & 0x000000FF) << 8;
