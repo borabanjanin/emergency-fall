@@ -15,9 +15,12 @@
 
 #define CPORTNUMBER 22
 #define BDRATE 9600
+#define CHEST 0
+#define THIGH 1
 
 unsigned char buf[4096];
 int buffersize = 0;
+short packet_type;
 
 FILE *logfile;
 
@@ -48,50 +51,48 @@ int ConnectSerialPort(){
 	return 0;
 }
 
-int StoreInput(Sample* chest, signed int measurement){
+int StoreInput(Sample* point, signed int measurement){
 		switch(typeinput){
 			case 0:
-				chest->n = measurement;
+				point->n = measurement;
 				break;
 			case 1:
 				break;
 			case 2:	
-				chest->xaccel = measurement;
+				point->xaccel = measurement;
 				break;
 			case 3:
 				break;
 			case 4:
-				chest->yaccel = measurement;
+				point->yaccel = measurement;
 				break;
 			case 5:
 				break;
 			case 6:
-				chest->zaccel = measurement;
+				point->zaccel = measurement;
 				break;
 			case 7:
 				break;
 			case 8:
-				chest->xrot = measurement;
+				point->xrot = measurement;
 				break;
 			case 9:
 				break;
 			case 10:
-				chest->yrot = measurement;
+				point->yrot = measurement;
 				break;
 			case 11:
 				break;
 			case 12:
-				chest->zrot = measurement;
+				point->zrot = measurement;
 				break;
 			case 13:
-				if(samplenumber>1){
-					printf("%i ",Samples[samplenumber].xaccel - Samples[samplenumber-1].xaccel);
-					printf("%i ",Samples[samplenumber].yaccel - Samples[samplenumber-1].yaccel);
-					printf("%i ",Samples[samplenumber].zaccel - Samples[samplenumber-1].zaccel);
-					printf("%i ",Samples[samplenumber].xrot - Samples[samplenumber-1].xrot);
-					printf("%i ",Samples[samplenumber].yrot - Samples[samplenumber-1].yrot);					
-					printf("%i ",Samples[samplenumber].zrot - Samples[samplenumber-1].zrot);
-				}
+					printf("%i ",point->xaccel);
+					printf("%i ",point->yaccel);
+					printf("%i ",point->zaccel);
+					printf("%i ",point->xrot);
+					printf("%i ",point->yrot);
+					printf("%i ",point->zrot);
 				break;
 		}
 
@@ -105,15 +106,24 @@ int ProcessInput(){
 	signed int sign_exten_mask = 0x00008000;
 	for(i=0; i < buffersize; i++){
 		char inputbyte =  buf[i];
+
 		if(typeinput == 0 || typeinput == 13){
 			if(inputbyte == 85){
+				packet_type = THIGH;
 				typeinput = 1;
+				thigh_info.type_input = 1;
+			}
+			if(inputbyte == 77){
+				packet_type = CHEST;
+				typeinput = 1;
+				chest_info.type_input = 1;
 			}
 			if(samplenumber > 999){
 				samplenumber = 0;	
 			}else{
 				samplenumber++;
 			}
+			i++;
 		}else if(typeinput == 1 || typeinput == 3 || typeinput == 5 || typeinput == 7 || typeinput == 9 || typeinput == 11){
 			measurement = (inputbyte & 0x000000FF) << 8;
 			typeinput++;
@@ -122,16 +132,30 @@ int ProcessInput(){
 			if(sign_exten_mask & measurement){
 				measurement |= 0xFFFF0000;
 			}
-			chest = &Samples[samplenumber];
-			StoreInput(chest, measurement);
+			if(CHEST == packet_type){
+				chest = &chest_samples[samplenumber];
+				StoreInput(chest, measurement);
+			}
+			if(THIGH == packet_type){
+				thigh = &thigh_samples[samplenumber];
+				StoreInput(thigh, measurement);
+			}
 			typeinput++;
-		}		
+		}
 		if(typeinput == 13){
 			printf("\n");
-			chest = &Samples[samplenumber];
-			StoreInput(chest, measurement);
-			ProcessData(chest);
-			GraphData(0, chest);
+			if(CHEST == packet_type){
+				chest = &chest_samples[samplenumber];
+				StoreInput(chest, measurement);
+				ProcessData(chest);
+				GraphData(CHEST, chest);
+			}
+			if(THIGH == packet_type){
+				thigh = &thigh_samples[samplenumber];
+				StoreInput(thigh, measurement);
+				ProcessData(thigh);
+				GraphData(THIGH, thigh);
+			}
 			printf("\n");
 		}
 

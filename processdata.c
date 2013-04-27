@@ -34,6 +34,7 @@ int GraphData(int sensor_id, Sample* point){
 	if(CHEST == sensor_id){
 		accel_chest[chest_sample] = (point->accel)/16000;
 		gnuplot_resetplot(plot_handle_chest);
+		gnuplot_set_xlabel(plot_handle_chest, "Chest");
 		gnuplot_cmd(plot_handle_chest, "set yrange [0:2]");
 		gnuplot_setstyle(plot_handle_chest, "lines");
 		 if(FALSE == chest_samples_fill){
@@ -50,28 +51,28 @@ int GraphData(int sensor_id, Sample* point){
 		}
 	}
 
-/*
 	if(THIGH == sensor_id){
-		accel_thigh[thigh_sample] = (sequence[point_number]->accel)/1600;
-		if(thigh_sample >= 25){
-			gnuplot_resetplot(plot_handle_thigh);
+		accel_thigh[thigh_sample] = (point->accel)/16000;
+		gnuplot_resetplot(plot_handle_thigh);
+		gnuplot_set_xlabel(plot_handle_thigh, "Thigh");
+		gnuplot_cmd(plot_handle_thigh, "set yrange [0:2]");
+		gnuplot_setstyle(plot_handle_thigh, "lines");
+		 if(FALSE == chest_samples_fill){
 			gnuplot_plot_x(plot_handle_thigh, accel_thigh, thigh_sample, "test");
-			thigh_sample = 0;
 		}else{
+			gnuplot_plot_x(plot_handle_thigh, accel_thigh, 25, "test");
+		}
+
+		if(thigh_sample < 24){
 			thigh_sample++;
+		}else{
+			thigh_sample = 0;
+			thigh_samples_fill = TRUE;
 		}
 	}
-	*/
+
 	return 0;
 }
-
-
-
-
-
-
-
-
 
 
 #endif
