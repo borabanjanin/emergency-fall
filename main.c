@@ -117,13 +117,13 @@ int ProcessInput(){
 				packet_type = CHEST;
 				typeinput = 1;
 				chest_info.type_input = 1;
+				i++;
 			}
 			if(samplenumber > 999){
 				samplenumber = 0;	
 			}else{
 				samplenumber++;
 			}
-			i++;
 		}else if(typeinput == 1 || typeinput == 3 || typeinput == 5 || typeinput == 7 || typeinput == 9 || typeinput == 11){
 			measurement = (inputbyte & 0x000000FF) << 8;
 			typeinput++;

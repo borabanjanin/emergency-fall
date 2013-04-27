@@ -57,7 +57,7 @@ int GraphData(int sensor_id, Sample* point){
 		gnuplot_set_xlabel(plot_handle_thigh, "Thigh");
 		gnuplot_cmd(plot_handle_thigh, "set yrange [0:2]");
 		gnuplot_setstyle(plot_handle_thigh, "lines");
-		 if(FALSE == chest_samples_fill){
+		 if(FALSE == thigh_samples_fill){
 			gnuplot_plot_x(plot_handle_thigh, accel_thigh, thigh_sample, "test");
 		}else{
 			gnuplot_plot_x(plot_handle_thigh, accel_thigh, 25, "test");
