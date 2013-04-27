@@ -11,15 +11,18 @@ typedef struct Sample{
 	int xrot;
 	int yrot;
 	int zrot;
+	double accel;
 
 }Sample;
 
 short samplenumber = 0;
 short typeinput = 0;
 Sample Samples[1000];
+Sample* chest;
 double accel_array[1000];
 FILE *logfile;
-gnuplot_ctrl * plot_handle;
+gnuplot_ctrl * plot_handle_chest;
+gnuplot_ctrl * plot_handle_thigh;
 
 #include "processdata.c"
 

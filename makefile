@@ -7,10 +7,7 @@ main.o: main.c main.h
 rs232.o: rs232.c
 	gcc -c rs232.c
 
-clean: rs232.c main.c 
-	gcc main.c rs232.c -o3 -o emergency -lm
-
-gnuplot_i.o: gnuplot_i.c
+gnuplot_i.o: gnuplot_i.c gnuplot_i.h
 	gcc -c gnuplot_i.c
 
 clean: 

@@ -48,40 +48,40 @@ int ConnectSerialPort(){
 	return 0;
 }
 
-int StoreInput(signed int measurement){
+int StoreInput(Sample* chest, signed int measurement){
 		switch(typeinput){
 			case 0:
-				Samples[samplenumber].n = measurement;
+				chest->n = measurement;
 				break;
 			case 1:
 				break;
 			case 2:	
-				Samples[samplenumber].xaccel = measurement;
+				chest->xaccel = measurement;
 				break;
 			case 3:
 				break;
 			case 4:
-				Samples[samplenumber].yaccel = measurement;
+				chest->yaccel = measurement;
 				break;
 			case 5:
 				break;
 			case 6:
-				Samples[samplenumber].zaccel = measurement;
+				chest->zaccel = measurement;
 				break;
 			case 7:
 				break;
 			case 8:
-				Samples[samplenumber].xrot = measurement;
+				chest->xrot = measurement;
 				break;
 			case 9:
 				break;
 			case 10:
-				Samples[samplenumber].yrot = measurement;
+				chest->yrot = measurement;
 				break;
 			case 11:
 				break;
 			case 12:
-				Samples[samplenumber].zrot = measurement;
+				chest->zrot = measurement;
 				break;
 			case 13:
 				if(samplenumber>1){
@@ -122,15 +122,16 @@ int ProcessInput(){
 			if(sign_exten_mask & measurement){
 				measurement |= 0xFFFF0000;
 			}
-			StoreInput(measurement);
+			chest = &Samples[samplenumber];
+			StoreInput(chest, measurement);
 			typeinput++;
 		}		
 		if(typeinput == 13){
 			printf("\n");
-			StoreInput(measurement);
-			double accel = ProcessData();
-			printf("\n%f\n",accel);
-			GraphData(0, accel);
+			chest = &Samples[samplenumber];
+			StoreInput(chest, measurement);
+			ProcessData(chest);
+			GraphData(0, chest);
 			printf("\n");
 		}
 
@@ -140,7 +141,8 @@ int ProcessInput(){
 }
 
 void my_handler(int s){
-	gnuplot_close(plot_handle);
+	gnuplot_close(plot_handle_chest);
+	gnuplot_close(plot_handle_thigh);
 //			printf("Closing logfile...\n");
 //			fclose(logfile);
 //			printf("Logfile closed\n");
@@ -151,7 +153,8 @@ void my_handler(int s){
 
 int main(){
 	ConnectSerialPort();
-	plot_handle = gnuplot_init();
+	plot_handle_thigh = gnuplot_init();
+	plot_handle_chest = gnuplot_init();
 //	OpenFile();
 //	printf("Opened log file\n");
 	char userinput = '!';
@@ -162,17 +165,7 @@ int main(){
 	sigaction(SIGINT, &SIGINTHANDLER, NULL);
 
 	while(1){
-	//	if(){
-//			scanf("%c",&userinput);
-	//	}
 
-		if(userinput == 'x' || userinput == 'c'){
-//			printf("Closing logfile...\n");
-//			fclose(logfile);
-//			printf("Logfile closed\n");
-			gnuplot_close(plot_handle);
-			break;
-		}
 		printf("Polling comport...\n");
 		buffersize = RS232_PollComport(CPORTNUMBER, buf, 4095);
 		if(buffersize > 0){
