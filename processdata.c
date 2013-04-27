@@ -34,8 +34,9 @@ int GraphData(int sensor_id, Sample* point){
 	if(CHEST == sensor_id){
 		accel_chest[chest_sample] = (point->accel)/16000;
 		gnuplot_resetplot(plot_handle_chest);
-
-		if(FALSE == chest_samples_fill){
+		gnuplot_cmd(plot_handle_chest, "set yrange [0:2]");
+		gnuplot_setstyle(plot_handle_chest, "lines");
+		 if(FALSE == chest_samples_fill){
 			gnuplot_plot_x(plot_handle_chest, accel_chest, chest_sample, "test");
 		}else{
 			gnuplot_plot_x(plot_handle_chest, accel_chest, 25, "test");
@@ -45,6 +46,7 @@ int GraphData(int sensor_id, Sample* point){
 			chest_sample++;
 		}else{
 			chest_sample = 0;
+			chest_samples_fill = TRUE;
 		}
 	}
 
