@@ -15,23 +15,20 @@ typedef struct Sample{
 
 }Sample;
 
-typedef struct PacketInfo{
+typedef struct SensorInfo{
 	short type_input;
 	short sample_number;
-}PacketInfo;
+	Sample data_array[1000];
+}SensorInfo;
 
-short samplenumber = 0;
-short typeinput = 0;
-PacketInfo chest_info;
-PacketInfo thigh_info;
-Sample chest_samples[1000];
-Sample thigh_samples[1000];
-Sample* chest;
-Sample* thigh;
+SensorInfo chest_info;
+SensorInfo thigh_info;
+//Sample chest_samples[1000];
+//Sample thigh_samples[1000];
+Sample* data_point;
 double accel_array[1000];
 FILE *logfile;
 gnuplot_ctrl * plot_handle_chest;
 gnuplot_ctrl * plot_handle_thigh;
 
-#include "processdata.c"
 

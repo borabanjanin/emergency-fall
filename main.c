@@ -10,8 +10,11 @@
  ***********************************************
  ***********************************************/
 
+#define DEBUG
+
 #include "rs232.h"
 #include "main.h"
+#include "processdata.c"
 
 #define CPORTNUMBER 22
 #define BDRATE 9600
@@ -20,7 +23,6 @@
 
 unsigned char buf[4096];
 int buffersize = 0;
-short packet_type;
 
 FILE *logfile;
 
@@ -40,7 +42,7 @@ FILE* OpenFile(){
 	return logfile;
 }
 
-
+#ifndef DEBUG
 int ConnectSerialPort(){
 
 	if(RS232_OpenComport(CPORTNUMBER, BDRATE)){
@@ -50,9 +52,14 @@ int ConnectSerialPort(){
 	printf("Connected serial port successfully\n");
 	return 0;
 }
+#else
+	int ConnectSerialPort(){
+		return 0;
+	}
+#endif
 
-int StoreInput(Sample* point, signed int measurement){
-		switch(typeinput){
+int StoreInput(Sample* point, signed int measurement, short type_input){
+		switch(type_input){
 			case 0:
 				point->n = measurement;
 				break;
@@ -102,75 +109,67 @@ int StoreInput(Sample* point, signed int measurement){
 
 int ProcessInput(){
 	int i;
-	signed int measurement;
-	signed int sign_exten_mask = 0x00008000;
 	for(i=0; i < buffersize; i++){
 		char inputbyte =  buf[i];
-
-		if(typeinput == 0 || typeinput == 13){
-			if(inputbyte == 85){
-				packet_type = THIGH;
-				typeinput = 1;
-				thigh_info.type_input = 1;
-			}
-			if(inputbyte == 77){
-				packet_type = CHEST;
-				typeinput = 1;
-				chest_info.type_input = 1;
-				i++;
-			}
-
-			if(packet_type == CHEST){
-				if(chest_info.sample_number < 999){
-					chest_info.sample_number++;
-				}else{
-					chest_info.sample_number = 0;
-				}
+		if(inputbyte == 85){
+			thigh_info.type_input = 1;
+			if(thigh_info.sample_number < 999){
+				thigh_info.sample_number++;
 			}else{
-				if(thigh_info.sample_number < 999){
-					thigh_info.sample_number++;
-				}else{
-					thigh_info.sample_number = 0;
-				}
+				thigh_info.sample_number = 0;
 			}
-		}else if(typeinput == 1 || typeinput == 3 || typeinput == 5 || typeinput == 7 || typeinput == 9 || typeinput == 11){
+			i++;
+			i = ParseInput(thigh_info, i);
+		}
+		inputbyte =  buf[i];
+		if(inputbyte == 77){
+			chest_info.type_input = 1;
+			i++;
+			if(chest_info.sample_number < 999){
+				chest_info.sample_number++;
+			}else{
+				chest_info.sample_number = 0;
+			}
+			i++;
+			i = ParseInput(chest_info, i);
+		}
+	}
+	return 0;
+}
+
+int ParseInput(SensorInfo point_data, int input_index){
+	signed int measurement;
+	signed int sign_exten_mask = 0x00008000;
+	while(input_index < buffersize){
+		char inputbyte =  buf[input_index];
+		if(point_data.type_input == 1 || point_data.type_input == 3 || point_data.type_input == 5
+				|| point_data.type_input == 7 || point_data.type_input == 9 || point_data.type_input == 11){
 			measurement = (inputbyte & 0x000000FF) << 8;
-			typeinput++;
-		}else if(typeinput == 2 || typeinput == 4 || typeinput == 6 || typeinput == 8 || typeinput == 10 || typeinput == 12){
+			point_data.type_input = point_data.type_input + 1;
+		}else if(point_data.type_input == 2 || point_data.type_input == 4 || point_data.type_input ==  6 || point_data.type_input ==  8
+				|| point_data.type_input ==  10 || point_data.type_input ==  12){
 			measurement |= inputbyte & 0x000000FF;
 			if(sign_exten_mask & measurement){
 				measurement |= 0xFFFF0000;
 			}
-			if(CHEST == packet_type){
-				chest = &chest_samples[samplenumber];
-				StoreInput(chest, measurement);
-			}
-			if(THIGH == packet_type){
-				thigh = &thigh_samples[samplenumber];
-				StoreInput(thigh, measurement);
-			}
-			typeinput++;
-		}
-		if(typeinput == 13){
-			printf("\n");
-			if(CHEST == packet_type){
-				chest = &chest_samples[samplenumber];
-				StoreInput(chest, measurement);
-				ProcessData(chest);
-				GraphData(CHEST, chest);
-			}
-			if(THIGH == packet_type){
-				thigh = &thigh_samples[samplenumber];
-				StoreInput(thigh, measurement);
-				ProcessData(thigh);
-				GraphData(THIGH, thigh);
-			}
-			printf("\n");
-		}
 
+			data_point = &point_data.data_array[point_data.sample_number];
+			StoreInput(data_point, measurement, point_data.type_input);
+			point_data.type_input = point_data.type_input + 1;
+		}
+		if(point_data.type_input == 13){
+			printf("\n");
+			data_point = &point_data.data_array[point_data.sample_number];
+			StoreInput(data_point, measurement, 13);
+			ProcessData(data_point);
+			GraphData(CHEST, data_point);
+			point_data.type_input = 0;
+			printf("\n");
+			return input_index;
+		}
+		input_index++;
 	}
-
-	return 0;
+	return input_index;
 }
 
 void my_handler(int s){
@@ -183,6 +182,39 @@ void my_handler(int s){
     exit(1);
 }
 
+int FakeData(){
+	int size = 5, index = 0, i;
+	for(i = 0; i < size; i++){
+		buf[index++] = 'M';
+		buf[index++] = 'G';
+		buf[index++] = 255;
+		buf[index++] = 248;
+		buf[index++] = 255;
+		buf[index++] = 247;
+		buf[index++] = 255;
+		buf[index++] = 246;
+		buf[index++] = 255;
+		buf[index++] = 245;
+		buf[index++] = 255;
+		buf[index++] = 245;
+		buf[index++] = 255;
+		buf[index++] = 244;
+		buf[index++] = 'U';
+		buf[index++] = 255;
+		buf[index++] = 254;
+		buf[index++] = 255;
+		buf[index++] = 253;
+		buf[index++] = 255;
+		buf[index++] = 252;
+		buf[index++] = 255;
+		buf[index++] = 251;
+		buf[index++] = 255;
+		buf[index++] = 250;
+		buf[index++] = 255;
+		buf[index++] = 249;
+	};
+	return size * 27;
+}
 
 int main(){
 	ConnectSerialPort();
@@ -200,7 +232,11 @@ int main(){
 	while(1){
 
 		printf("Polling comport...\n");
+#ifndef DEBUG
 		buffersize = RS232_PollComport(CPORTNUMBER, buf, 4095);
+#else
+		buffersize = FakeData();
+#endif
 		if(buffersize > 0){
 			buf[buffersize] = 0;
 			ProcessInput();
