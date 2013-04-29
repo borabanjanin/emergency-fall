@@ -10,7 +10,7 @@
  ***********************************************
  ***********************************************/
 
-//#define DEBUG
+#define DEBUG
 
 #include "rs232.h"
 #include "main.h"
@@ -107,39 +107,9 @@ int StoreInput(Sample* point, signed int measurement, short type_input){
 }
 
 
-int ProcessInput(){
-	int i;
-	for(i=0; i < buffersize; i++){
-		char inputbyte =  buf[i];
-		if(inputbyte == 85){
-			printf("chest data received\n");
-			thigh_info.type_input = 1;
-			if(thigh_info.sample_number < 999){
-				thigh_info.sample_number++;
-			}else{
-				thigh_info.sample_number = 0;
-			}
-			i++;
-			i = ParseInput(thigh_info, i, THIGH);
-		}
-		inputbyte =  buf[i];
-		if(inputbyte == 77){
-			printf("thigh data received\n");
-			chest_info.type_input = 1;
-			i++;
-			if(chest_info.sample_number < 999){
-				chest_info.sample_number++;
-			}else{
-				chest_info.sample_number = 0;
-			}
-			i++;
-			i = ParseInput(chest_info, i, CHEST);
-		}
-	}
-	return 0;
-}
 
-int ParseInput(SensorInfo point_data, int input_index, short packet_type){
+
+int ParseInput(short passed, SensorInfo point_data, int input_index){
 	signed int measurement;
 	signed int sign_exten_mask = 0x00008000;
 	while(input_index < buffersize){
@@ -164,7 +134,7 @@ int ParseInput(SensorInfo point_data, int input_index, short packet_type){
 			data_point = &point_data.data_array[point_data.sample_number];
 			StoreInput(data_point, measurement, 13);
 			ProcessData(data_point);
-			GraphData(packet_type, data_point);
+			GraphData(passed, data_point);
 			point_data.type_input = 0;
 			printf("\n");
 			return input_index;
@@ -172,6 +142,38 @@ int ParseInput(SensorInfo point_data, int input_index, short packet_type){
 		input_index++;
 	}
 	return input_index;
+}
+
+int ProcessInput(){
+	int i;
+	for(i=0; i < buffersize; i++){
+		char inputbyte =  buf[i];
+		if(inputbyte == 85){
+			printf("thigh data received\n");
+			thigh_info.type_input = 1;
+			if(thigh_info.sample_number < 999){
+				thigh_info.sample_number++;
+			}else{
+				thigh_info.sample_number = 0;
+			}
+			i++;
+			i = ParseInput(THIGH, thigh_info, i);
+		}
+		inputbyte =  buf[i];
+		if(inputbyte == 77){
+			printf("thigh data received\n");
+			chest_info.type_input = 1;
+			i++;
+			if(chest_info.sample_number < 999){
+				chest_info.sample_number++;
+			}else{
+				chest_info.sample_number = 0;
+			}
+			i++;
+			i = ParseInput(CHEST, chest_info, i);
+		}
+	}
+	return 0;
 }
 
 void my_handler(int s){

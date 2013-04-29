@@ -30,7 +30,7 @@ Sample* ProcessData(Sample* point){
 	return point;
 }
 
-int GraphData(int sensor_id, Sample* point){
+int GraphData(short sensor_id, Sample* point){
 
 	if(CHEST == sensor_id){
 		accel_chest[chest_sample] = (point->accel)/16000;
