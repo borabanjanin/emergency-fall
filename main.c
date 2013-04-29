@@ -120,7 +120,7 @@ int ProcessInput(){
 				thigh_info.sample_number = 0;
 			}
 			i++;
-			i = ParseInput(thigh_info, i);
+			i = ParseInput(thigh_info, i, THIGH);
 		}
 		inputbyte =  buf[i];
 		if(inputbyte == 77){
@@ -133,13 +133,13 @@ int ProcessInput(){
 				chest_info.sample_number = 0;
 			}
 			i++;
-			i = ParseInput(chest_info, i);
+			i = ParseInput(chest_info, i, CHEST);
 		}
 	}
 	return 0;
 }
 
-int ParseInput(SensorInfo point_data, int input_index){
+int ParseInput(SensorInfo point_data, int input_index, short packet_type){
 	signed int measurement;
 	signed int sign_exten_mask = 0x00008000;
 	while(input_index < buffersize){
@@ -164,7 +164,7 @@ int ParseInput(SensorInfo point_data, int input_index){
 			data_point = &point_data.data_array[point_data.sample_number];
 			StoreInput(data_point, measurement, 13);
 			ProcessData(data_point);
-			GraphData(CHEST, data_point);
+			GraphData(packet_type, data_point);
 			point_data.type_input = 0;
 			printf("\n");
 			return input_index;
