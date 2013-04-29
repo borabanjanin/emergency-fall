@@ -106,9 +106,6 @@ int StoreInput(Sample* point, signed int measurement, short type_input){
 		return 0;
 }
 
-
-
-
 int ParseInput(short passed, SensorInfo point_data, int input_index){
 	signed int measurement;
 	signed int sign_exten_mask = 0x00008000;
