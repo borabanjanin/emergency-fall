@@ -10,7 +10,7 @@
  ***********************************************
  ***********************************************/
 
-#define DEBUG
+//#define DEBUG
 
 #include "rs232.h"
 #include "main.h"
@@ -112,6 +112,7 @@ int ProcessInput(){
 	for(i=0; i < buffersize; i++){
 		char inputbyte =  buf[i];
 		if(inputbyte == 85){
+			printf("chest data received\n");
 			thigh_info.type_input = 1;
 			if(thigh_info.sample_number < 999){
 				thigh_info.sample_number++;
@@ -123,6 +124,7 @@ int ProcessInput(){
 		}
 		inputbyte =  buf[i];
 		if(inputbyte == 77){
+			printf("thigh data received\n");
 			chest_info.type_input = 1;
 			i++;
 			if(chest_info.sample_number < 999){
