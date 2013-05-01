@@ -84,12 +84,15 @@ int CalibrationRoutine(Sample* point){
 		cali_chest.xrot = point->xrot;
 		cali_chest.yrot = point->yrot;
 		cali_chest.zrot = point->zrot;
+		cali_chest.accel = point->accel;
+		cali_chest.one_g = point->accel;
 	}else{
-
+		cali_chest.one_g = (point->accel-cali_chest.one_g)*0.2+(point->accel);
 	}
-	printf("Button pushed\n");
 	return 0;
 }
+
+
 
 
 #endif

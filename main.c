@@ -149,7 +149,7 @@ int ProcessInput(){
 	for(i=0; i < buffersize; i++){
 		char inputbyte =  buf[i];
 		if(inputbyte == 85){
-			printf("chest data received\n");
+			printf("thigh data received\n");
 			thigh_info.type_input = 1;
 			if(thigh_info.sample_number < 999){
 				thigh_info.sample_number++;
@@ -161,14 +161,16 @@ int ProcessInput(){
 		}
 		inputbyte =  buf[i];
 		if(inputbyte == 77){
-			printf("thigh data received\n");
+			printf("chest data received\n");
 			chest_info.type_input = 1;
 			i++;
 			inputbyte =  buf[i];
 			if('B' == inputbyte){
-				chest_info.cali_active = TRUE;
-			}{
-				chest_info.cali_active = FALSE;
+				chest_info.cali_active = 1;
+				printf("cali active: %i\n",chest_info.cali_active);
+			}else{
+				chest_info.cali_active = 0;
+				printf("cali active: %i\n",chest_info.cali_active);
 			}
 			if(chest_info.sample_number < 999){
 				chest_info.sample_number++;
@@ -232,6 +234,8 @@ int Initialize(){
 	plot_handle_thigh = gnuplot_init();
 	plot_handle_chest = gnuplot_init();
 	char userinput = '!';
+	chest_info.cali_active = FALSE;
+	chest_info.type_input = 0;
 	return 0;
 }
 

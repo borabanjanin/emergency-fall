@@ -33,6 +33,8 @@ typedef struct CalibrateInfo{
 	int xrot;
 	int yrot;
 	int zrot;
+	double accel;
+	double one_g;
 }CalibrateInfo;
 
 SensorInfo chest_info;
