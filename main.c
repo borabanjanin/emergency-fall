@@ -10,7 +10,7 @@
  ***********************************************
  ***********************************************/
 
-//define DEBUG
+#define DEBUG
 
 #include "rs232.h"
 #include "main.h"
@@ -21,8 +21,8 @@
 #define CHEST 0
 #define THIGH 1
 
-unsigned char buf[4096];
-int buffersize = 0;
+
+
 
 FILE *logfile;
 
@@ -132,6 +132,9 @@ int ParseInput(short passed, SensorInfo point_data, int input_index){
 			StoreInput(data_point, measurement, 13);
 			ProcessData(data_point);
 			GraphData(passed, data_point);
+			if(point_data.cali_active){
+				CalibrationRoutine(data_point);
+			}
 			point_data.type_input = 0;
 			printf("\n");
 			return input_index;
@@ -146,7 +149,7 @@ int ProcessInput(){
 	for(i=0; i < buffersize; i++){
 		char inputbyte =  buf[i];
 		if(inputbyte == 85){
-			printf("thigh data received\n");
+			printf("chest data received\n");
 			thigh_info.type_input = 1;
 			if(thigh_info.sample_number < 999){
 				thigh_info.sample_number++;
@@ -161,6 +164,12 @@ int ProcessInput(){
 			printf("thigh data received\n");
 			chest_info.type_input = 1;
 			i++;
+			inputbyte =  buf[i];
+			if('B' == inputbyte){
+				chest_info.cali_active = TRUE;
+			}{
+				chest_info.cali_active = FALSE;
+			}
 			if(chest_info.sample_number < 999){
 				chest_info.sample_number++;
 			}else{
@@ -187,7 +196,7 @@ int FakeData(){
 	int size = 5, index = 0, i;
 	for(i = 0; i < size; i++){
 		buf[index++] = 'M';
-		buf[index++] = 'G';
+		buf[index++] = 'B';
 		buf[index++] = 255;
 		buf[index++] = 248;
 		buf[index++] = 255;
@@ -217,13 +226,21 @@ int FakeData(){
 	return size * 27;
 }
 
-int main(){
-	ConnectSerialPort();
+int Initialize(){
+	cali_chest.fill = 0;
+	int buffersize = 0;
 	plot_handle_thigh = gnuplot_init();
 	plot_handle_chest = gnuplot_init();
+	char userinput = '!';
+	return 0;
+}
+
+int main(){
+	ConnectSerialPort();
+	Initialize();
+
 //	OpenFile();
 //	printf("Opened log file\n");
-	char userinput = '!';
 	struct sigaction SIGINTHANDLER;
 	SIGINTHANDLER.sa_handler = my_handler;
 	sigemptyset(&SIGINTHANDLER.sa_mask);

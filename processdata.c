@@ -75,5 +75,21 @@ int GraphData(short sensor_id, Sample* point){
 	return 0;
 }
 
+int CalibrationRoutine(Sample* point){
+	if(FALSE == cali_chest.fill){
+		cali_chest.fill = TRUE;
+		cali_chest.xaccel = point->xaccel;
+		cali_chest.yaccel = point->yaccel;
+		cali_chest.zaccel = point->zaccel;
+		cali_chest.xrot = point->xrot;
+		cali_chest.yrot = point->yrot;
+		cali_chest.zrot = point->zrot;
+	}else{
+
+	}
+	printf("Button pushed\n");
+	return 0;
+}
+
 
 #endif
