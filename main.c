@@ -110,7 +110,7 @@ int StoreInput(Sample* point, signed int measurement, short type_input){
 
 
 int callNMA(){
-	printf("enter\n");
+     printf("enter\n");
      PyObject *myPyrowl, *myPprint, *myOS, *myTime, *myRes, *arglist, *arglist2, *arglist3, *myP = NULL;
      printf("Starting\n");
      Py_Initialize();
@@ -123,12 +123,12 @@ int callNMA(){
      arglist = Py_BuildValue("(s)","b95a1e3705fed5edcb00652f405a768dfef02001c687c1eb");
      myP = PyEval_CallObject(PyObject_GetAttrString(myPyrowl, "PyNMA"), arglist);
      myRes = PyObject_GetAttrString(myP, "push");
-    arglist2 = Py_BuildValue("(s, s, s, s)","My Raspberry Pi", "Fall Warning","Patient 1 Has Fallen", "batch_mode=False");
+     arglist2 = Py_BuildValue("(s, s, s, s)","My Raspberry Pi", "Fall Warning","Patient 1 Has Fallen", "batch_mode=False");
      PyEval_CallObject(myRes, arglist2);
-     arglist3 = Py_BuildValue("(i)", 60);
-     PyEval_CallObject(PyObject_GetAttrString(myTime, "sleep"), arglist3);
+     //arglist3 = Py_BuildValue("(i)", 60);
+     //PyEval_CallObject(PyObject_GetAttrString(myTime, "sleep"), arglist3);
      Py_Finalize();
-	printf("exit\n");
+     printf("exit\n");
      return 0;
 }
 
