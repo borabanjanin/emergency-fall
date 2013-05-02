@@ -15,6 +15,8 @@
 #include "rs232.h"
 #include "main.h"
 #include "processdata.c"
+#include <python2.7/Python.h>
+#include <stdio.h>
 
 #define CPORTNUMBER 22
 #define BDRATE 9600
@@ -105,6 +107,30 @@ int StoreInput(Sample* point, signed int measurement, short type_input){
 
 		return 0;
 }
+
+
+int callNMA()
+{
+     PyObject *myPyrowl, *myPprint, *myOS, *myTime, *myRes, *arglist, *arglist2, *arglist3, *myP = NULL;
+     printf("Starting\n");
+     Py_Initialize();
+     PyRun_SimpleString("import sys");
+     PyRun_SimpleString("sys.path.append(\".\")");
+     myPyrowl = PyImport_ImportModule("pynma");
+     myPprint = PyImport_ImportModule("pprint");
+     myOS = PyImport_ImportModule("os");
+     myTime = PyImport_ImportModule("time");
+     arglist = Py_BuildValue("(s)","b95a1e3705fed5edcb00652f405a768dfef02001c687cleb");
+     myP = PyEval_CallObject(PyObject_GetAttrString(myPyrowl, "PyNMA"), arglist);
+     myRes = PyObject_GetAttrString(myP, "push");
+    arglist2 = Py_BuildValue("(s, s, s, s)","My Raspberry Pi", "Fall Warning","Patient 1 Has Fallen", "batch_mode=False");
+     PyEval_CallObject(myRes, arglist2);
+     arglist3 = Py_BuildValue("(i)", 60);
+     PyEval_CallObject(PyObject_GetAttrString(myTime, "sleep"), arglist3);
+     Py_Finalize();
+     return 0;
+}
+
 
 int ParseInput(short passed, SensorInfo point_data, int input_index){
 	signed int measurement;
@@ -229,6 +255,7 @@ int FakeData(){
 }
 
 int Initialize(){
+	callNMA();
 	cali_chest.fill = 0;
 	int buffersize = 0;
 	plot_handle_thigh = gnuplot_init();
