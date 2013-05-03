@@ -96,19 +96,19 @@ int StoreInput(Sample* point, signed int measurement, short type_input){
 				point->zrot = measurement;
 				break;
 			case 13:
-					printf("%i ",point->xaccel);
+/*					printf("%i ",point->xaccel);
 					printf("%i ",point->yaccel);
 					printf("%i ",point->zaccel);
 					printf("%i ",point->xrot);
 					printf("%i ",point->yrot);
 					printf("%i ",point->zrot);
-				break;
+*/				break;
 		}
 
 		return 0;
 }
 
-
+#ifndef DEBUG
 int callNMA(){
      printf("enter\n");
      PyObject *myPyrowl, *myPprint, *myOS, *myTime, *myRes, *arglist, *arglist2, *arglist3, *myP = NULL;
@@ -131,6 +131,7 @@ int callNMA(){
      printf("exit\n");
      return 0;
 }
+#endif
 
 
 int ParseInput(short passed, SensorInfo point_data, int input_index){
@@ -154,7 +155,6 @@ int ParseInput(short passed, SensorInfo point_data, int input_index){
 			point_data.type_input = point_data.type_input + 1;
 		}
 		if(point_data.type_input == 13){
-			printf("\n");
 			data_point = &point_data.data_array[point_data.sample_number];
 			StoreInput(data_point, measurement, 13);
 			ProcessData(data_point);
@@ -162,8 +162,8 @@ int ParseInput(short passed, SensorInfo point_data, int input_index){
 			if(point_data.cali_active){
 				CalibrationRoutine(data_point);
 			}
+			AccelAngle(point_data);
 			point_data.type_input = 0;
-			printf("\n");
 			return input_index;
 		}
 		input_index++;
@@ -176,7 +176,6 @@ int ProcessInput(){
 	for(i=0; i < buffersize; i++){
 		char inputbyte =  buf[i];
 		if(inputbyte == 85){
-			printf("thigh data received\n");
 			thigh_info.type_input = 1;
 			if(thigh_info.sample_number < 999){
 				thigh_info.sample_number++;
@@ -188,16 +187,13 @@ int ProcessInput(){
 		}
 		inputbyte =  buf[i];
 		if(inputbyte == 77){
-			printf("chest data received\n");
 			chest_info.type_input = 1;
 			i++;
 			inputbyte =  buf[i];
 			if('B' == inputbyte){
 				chest_info.cali_active = 1;
-				printf("cali active: %i\n",chest_info.cali_active);
 			}else{
 				chest_info.cali_active = 0;
-				printf("cali active: %i\n",chest_info.cali_active);
 			}
 			if(chest_info.sample_number < 999){
 				chest_info.sample_number++;
@@ -256,7 +252,8 @@ int FakeData(){
 }
 
 int Initialize(){
-	callNMA();
+	chest_info.dt = 0.0146;
+	thigh_info.dt = 0.0135;
 	cali_chest.fill = 0;
 	int buffersize = 0;
 	plot_handle_thigh = gnuplot_init();

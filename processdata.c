@@ -93,6 +93,16 @@ int CalibrationRoutine(Sample* point){
 }
 
 
-
+int AccelAngle(SensorInfo sensor){
+	Sample* point = &sensor.data_array[sensor.sample_number];
+	double xaccel = (double)point->xaccel;
+	double yaccel = (double)point->yaccel;
+	double zaccel = (double)point->zaccel;
+	sensor.xangle = acos(xaccel/(point->accel));
+	sensor.yangle = acos(yaccel/(point->accel));
+	sensor.zangle = acos(zaccel/(point->accel));
+	printf("%f %f %f \n",sensor.xangle,sensor.yangle,sensor.zangle);
+	return 0;
+}
 
 #endif
