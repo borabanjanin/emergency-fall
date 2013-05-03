@@ -8,6 +8,7 @@
 #define THIGH 1
 #define TRUE 1
 #define FALSE 0
+#define PI 3.14159265
 
 double accel_chest[25];
 double accel_thigh[25];
@@ -98,7 +99,7 @@ int AccelAngle(SensorInfo sensor){
 	double xaccel = (double)point->xaccel;
 	double yaccel = (double)point->yaccel;
 	double zaccel = (double)point->zaccel;
-	sensor.xangle = acos(xaccel/(point->accel));
+	sensor.xangle = acos(xaccel/(point->accel))*180.0/PI;
 	sensor.yangle = acos(yaccel/(point->accel));
 	sensor.zangle = acos(zaccel/(point->accel));
 	printf("%f %f %f \n",sensor.xangle,sensor.yangle,sensor.zangle);
