@@ -159,6 +159,7 @@ int ParseInput(short passed, SensorInfo point_data, int input_index){
 			StoreInput(data_point, measurement, 13);
 			ProcessData(data_point);
 			AccelAngle(point_data);
+			ComplementaryFilter(point_data)
 			GraphData(passed, point_data);
 			if(point_data.cali_active){
 				CalibrationRoutine(data_point);
