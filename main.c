@@ -261,6 +261,8 @@ int Initialize(){
 	int buffersize = 0;
 	plot_handle_thigh = gnuplot_init();
 	plot_handle_chest = gnuplot_init();
+	plot_handle_thigh_angle = gnuplot_init();
+	plot_handle_chest_angle = gnuplot_init();
 	char userinput = '!';
 	chest_info.cali_active = FALSE;
 	chest_info.type_input = 0;
