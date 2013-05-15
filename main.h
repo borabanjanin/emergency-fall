@@ -54,6 +54,8 @@ double accel_array[1000];
 FILE *logfile;
 gnuplot_ctrl * plot_handle_chest;
 gnuplot_ctrl * plot_handle_thigh;
+gnuplot_ctrl * plot_handle_chest_angle;
+gnuplot_ctrl * plot_handle_thigh_angle;
 CalibrateInfo cali_chest;
 unsigned char buf[4096];
 int buffersize;

@@ -31,8 +31,8 @@ Sample* ProcessData(Sample* point){
 	return point;
 }
 
-int GraphData(short sensor_id, Sample* point){
-
+int GraphData(short sensor_id, SensorInfo point_data){
+	Sample*point = &point_data.data_array[point_data.sample_number];
 	if(CHEST == sensor_id){
 		accel_chest[chest_sample] = (point->accel)/16000;
 		gnuplot_resetplot(plot_handle_chest);

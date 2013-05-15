@@ -158,11 +158,11 @@ int ParseInput(short passed, SensorInfo point_data, int input_index){
 			data_point = &point_data.data_array[point_data.sample_number];
 			StoreInput(data_point, measurement, 13);
 			ProcessData(data_point);
-			GraphData(passed, data_point);
+			AccelAngle(point_data);
+			GraphData(passed, point_data);
 			if(point_data.cali_active){
 				CalibrationRoutine(data_point);
 			}
-			AccelAngle(point_data);
 			point_data.type_input = 0;
 			return input_index;
 		}
@@ -210,6 +210,8 @@ int ProcessInput(){
 void my_handler(int s){
 	gnuplot_close(plot_handle_chest);
 	gnuplot_close(plot_handle_thigh);
+	gnuplot_close(plot_handle_chest_angle);
+	gnuplot_close(plot_handle_thigh_angle);
 //			printf("Closing logfile...\n");
 //			fclose(logfile);
 //			printf("Logfile closed\n");
