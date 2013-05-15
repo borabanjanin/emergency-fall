@@ -25,9 +25,12 @@ typedef struct SensorInfo{
 	short cali_active;
 	Sample data_array[1000];
 	double dt;
-	double xangle;
-	double yangle;
-	double zangle;
+	double xangle_accel;
+	double yangle_accel;
+	double zangle_accel;
+	double xangle_comp;
+	double yangle_comp;
+	double zangle_comp;
 }SensorInfo;
 
 typedef struct CalibrateInfo{

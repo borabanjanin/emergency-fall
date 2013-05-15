@@ -99,11 +99,31 @@ int AccelAngle(SensorInfo sensor){
 	double xaccel = (double)point->xaccel;
 	double yaccel = (double)point->yaccel;
 	double zaccel = (double)point->zaccel;
-	sensor.xangle = acos(xaccel/(point->accel))*180.0/PI;
-	sensor.yangle = acos(yaccel/(point->accel));
-	sensor.zangle = acos(zaccel/(point->accel));
-	printf("%f %f %f \n",sensor.xangle,sensor.yangle,sensor.zangle);
+	sensor.xangle_accel = acos(xaccel/(point->accel))*180.0/PI;
+	sensor.yangle_accel = acos(yaccel/(point->accel))*180.0/PI;
+	sensor.zangle_accel = acos(zaccel/(point->accel))*180.0/PI;
+	printf("%f %f %f \n",sensor.xangle_accel,sensor.yangle_accel,sensor.zangle_accel);
 	return 0;
+}
+
+
+int ComplementaryFilter(SensorInfo point_data) {
+	double time_constant = 0.97371;
+
+	double x_ang_vel = (double)point_data.data_array[point_data.sample_number].xrot;
+	x_ang_vel = 250 * x_ang_vel/32767.5;
+	point_data.xangle_comp = time_constant * (point_data.xangle_comp * x_ang_vel * point_data.dt) + (1 - time_constant) * point_data.xangle_accel;
+
+	double y_ang_vel = (double)point_data.data_array[point_data.sample_number].yrot;
+	y_ang_vel = 250 * y_ang_vel/32767.5;
+	point_data.yangle_comp = time_constant * (point_data.yangle_comp * y_ang_vel * point_data.dt) + (1 - time_constant) * point_data.yangle_accel;
+
+	double z_ang_vel = (double)point_data.data_array[point_data.sample_number].zrot;
+	z_ang_vel = 250 * z_ang_vel/32767.5;
+	point_data.zangle_comp = time_constant * (point_data.zangle_comp * z_ang_vel * point_data.dt) + (1 - time_constant) * point_data.zangle_accel;
+
+	return 0;
+
 }
 
 #endif
