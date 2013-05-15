@@ -10,7 +10,7 @@
 #define FALSE 0
 #define PI 3.14159265
 #define PLOTCHESTANGLE 0
-#define PLOTTHIGHANGLE 1
+#define PLOTTHIGHANGLE 0
 
 
 
@@ -43,7 +43,7 @@ Sample* ProcessData(Sample* point){
 }
 
 int GraphData(short sensor_id, SensorInfo point_data){
-	Sample*point = &point_data.data_array[point_data.sample_number];
+	Sample* point = &point_data.data_array[point_data.sample_number];
 	if(CHEST == sensor_id){
 		accel_chest[chest_sample] = (point->accel)/16000;
 		gnuplot_resetplot(plot_handle_chest);
@@ -72,6 +72,7 @@ int GraphData(short sensor_id, SensorInfo point_data){
 		gnuplot_setstyle(plot_handle_thigh, "lines");
 
 		#ifdef PLOTTHIGHANGLE
+		printf("thigh angle plotting\n");
 		gnuplot_resetplot(plot_handle_thigh_angle);
 		gnuplot_set_xlabel(plot_handle_thigh_angle, "Thigh Angle");
 		gnuplot_cmd(plot_handle_thigh_angle, "set yrange [0:2]");
