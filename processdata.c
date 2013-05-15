@@ -99,10 +99,12 @@ int AccelAngle(SensorInfo sensor){
 	double xaccel = (double)point->xaccel;
 	double yaccel = (double)point->yaccel;
 	double zaccel = (double)point->zaccel;
+
 	sensor.xangle_accel = acos(xaccel/(point->accel))*180.0/PI;
 	sensor.yangle_accel = acos(yaccel/(point->accel))*180.0/PI;
 	sensor.zangle_accel = acos(zaccel/(point->accel))*180.0/PI;
 	printf("%f %f %f \n",sensor.xangle_accel,sensor.yangle_accel,sensor.zangle_accel);
+
 	return 0;
 }
 
