@@ -9,9 +9,20 @@
 #define TRUE 1
 #define FALSE 0
 #define PI 3.14159265
+#define PLOTCHESTANGLE 0
+#define PLOTTHIGHANGLE 1
+
+
 
 double accel_chest[25];
 double accel_thigh[25];
+double x_angle_chest[25];
+double y_angle_chest[25];
+double z_angle_chest[25];
+double x_angle_thigh[25];
+double y_angle_thigh[25];
+double z_angle_thigh[25];
+
 int chest_sample = 0;
 int thigh_sample = 0;
 short chest_samples_fill = FALSE;
@@ -36,7 +47,7 @@ int GraphData(short sensor_id, SensorInfo point_data){
 	if(CHEST == sensor_id){
 		accel_chest[chest_sample] = (point->accel)/16000;
 		gnuplot_resetplot(plot_handle_chest);
-		gnuplot_set_xlabel(plot_handle_chest, "Chest");
+		gnuplot_set_xlabel(plot_handle_chest, "Chest Accel g/s");
 		gnuplot_cmd(plot_handle_chest, "set yrange [0:2]");
 		gnuplot_setstyle(plot_handle_chest, "lines");
 		 if(FALSE == chest_samples_fill){
@@ -56,9 +67,28 @@ int GraphData(short sensor_id, SensorInfo point_data){
 	if(THIGH == sensor_id){
 		accel_thigh[thigh_sample] = (point->accel)/16000;
 		gnuplot_resetplot(plot_handle_thigh);
-		gnuplot_set_xlabel(plot_handle_thigh, "Thigh");
+		gnuplot_set_xlabel(plot_handle_thigh, "Thigh Accel g/s");
 		gnuplot_cmd(plot_handle_thigh, "set yrange [0:2]");
 		gnuplot_setstyle(plot_handle_thigh, "lines");
+
+		#ifdef PLOTTHIGHANGLE
+		gnuplot_resetplot(plot_handle_thigh_angle);
+		gnuplot_set_xlabel(plot_handle_thigh_angle, "Thigh Angle");
+		gnuplot_cmd(plot_handle_thigh_angle, "set yrange [0:2]");
+		gnuplot_setstyle(plot_handle_thigh_angle, "lines");
+
+		if(FALSE == thigh_samples_fill){
+			gnuplot_plot_x(plot_handle_thigh_angle, x_angle_thigh, thigh_sample, "test");
+			gnuplot_plot_x(plot_handle_thigh_angle, y_angle_thigh, thigh_sample, "test");
+			gnuplot_plot_x(plot_handle_thigh_angle, z_angle_thigh, thigh_sample, "test");
+		}else{
+			gnuplot_plot_x(plot_handle_thigh_angle, x_angle_thigh, 25, "test");
+			gnuplot_plot_x(plot_handle_thigh_angle, y_angle_thigh, 25, "test");
+			gnuplot_plot_x(plot_handle_thigh_angle, z_angle_thigh, 25, "test");
+		}
+
+		#endif
+
 		 if(FALSE == thigh_samples_fill){
 			gnuplot_plot_x(plot_handle_thigh, accel_thigh, thigh_sample, "test");
 		}else{
