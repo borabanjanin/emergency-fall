@@ -73,7 +73,10 @@ int GraphData(short sensor_id, SensorInfo point_data){
 
 		#ifdef PLOTTHIGHANGLE
 		printf("thigh angle plotting\n");
-		gnuplot_resetplot(plot_handle_thigh_angle);
+		x_angle_thigh[thigh_sample] = point_data.xangle_comp;
+		y_angle_thigh[thigh_sample] = point_data.yangle_comp;
+		z_angle_thigh[thigh_sample] = point_data.zangle_comp;
+
 		gnuplot_set_xlabel(plot_handle_thigh_angle, "Thigh Angle");
 		gnuplot_cmd(plot_handle_thigh_angle, "set yrange [0:2]");
 		gnuplot_setstyle(plot_handle_thigh_angle, "lines");
@@ -134,7 +137,7 @@ int AccelAngle(SensorInfo sensor){
 	sensor.xangle_accel = acos(xaccel/(point->accel))*180.0/PI;
 	sensor.yangle_accel = acos(yaccel/(point->accel))*180.0/PI;
 	sensor.zangle_accel = acos(zaccel/(point->accel))*180.0/PI;
-	printf("%f %f %f \n",sensor.xangle_accel,sensor.yangle_accel,sensor.zangle_accel);
+	printf("accel angle: %f %f %f \n",sensor.xangle_accel,sensor.yangle_accel,sensor.zangle_accel);
 
 	return 0;
 }
@@ -155,6 +158,8 @@ int ComplementaryFilter(SensorInfo point_data) {
 	z_ang_vel = 250 * z_ang_vel/32767.5;
 	point_data.zangle_comp = time_constant * (point_data.zangle_comp * z_ang_vel * point_data.dt) + (1 - time_constant) * point_data.zangle_accel;
 
+
+	printf("comp angle: %f %f %f \n",point_data.xangle_comp,point_data.yangle_comp,point_data.zangle_comp);
 	return 0;
 
 }
