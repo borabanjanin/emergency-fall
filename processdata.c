@@ -137,7 +137,7 @@ int AccelAngle(SensorInfo sensor){
 	sensor.xangle_accel = acos(xaccel/(point->accel))*180.0/PI;
 	sensor.yangle_accel = acos(yaccel/(point->accel))*180.0/PI;
 	sensor.zangle_accel = acos(zaccel/(point->accel))*180.0/PI;
-	printf("accel angle: %f %f %f \n",sensor.xangle_accel,sensor.yangle_accel,sensor.zangle_accel);
+	//printf("accel angle: %f %f %f \n",sensor.xangle_accel,sensor.yangle_accel,sensor.zangle_accel);
 
 	return 0;
 }
@@ -158,7 +158,7 @@ int ComplementaryFilter(SensorInfo point_data) {
 	z_ang_vel = 250 * z_ang_vel/32767.5;
 	point_data.zangle_comp = time_constant * (point_data.zangle_comp * z_ang_vel * point_data.dt) + (1 - time_constant) * point_data.zangle_accel;
 
-
+	printf("x_ang_vel %f %f %f\n", x_ang_vel, y_ang_vel, z_ang_vel);
 	printf("comp angle: %f %f %f \n",point_data.xangle_comp,point_data.yangle_comp,point_data.zangle_comp);
 	return 0;
 
