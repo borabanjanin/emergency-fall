@@ -144,7 +144,7 @@ int AccelAngle(SensorInfo sensor){
 
 
 int ComplementaryFilter(SensorInfo point_data) {
-	double time_constant = 0.97371;
+	double time_constant = 0.0;
 
 	double x_ang_vel = (double)point_data.data_array[point_data.sample_number].xrot;
 	point_data.xangle_accel = 250 * x_ang_vel/32767.5;
