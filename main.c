@@ -10,7 +10,7 @@
  ***********************************************
  ***********************************************/
 
-//#define DEBUG
+#define DEBUG
 
 #include "rs232.h"
 #include "main.h"
@@ -96,13 +96,13 @@ int StoreInput(Sample* point, signed int measurement, short type_input){
 				point->zrot = measurement;
 				break;
 			case 13:
-/*					printf("%i ",point->xaccel);
-					printf("%i ",point->yaccel);
-					printf("%i ",point->zaccel);
-					printf("%i ",point->xrot);
-					printf("%i ",point->yrot);
-					printf("%i ",point->zrot);
-*/				break;
+					fprintf(logfile,"%i ",point->xaccel);
+					fprintf(logfile,"%i ",point->yaccel);
+					fprintf(logfile,"%i ",point->zaccel);
+					fprintf(logfile,"%i ",point->xrot);
+					fprintf(logfile,"%i ",point->yrot);
+					fprintf(logfile,"%i \n",point->zrot);
+				break;
 		}
 
 		return 0;
@@ -158,9 +158,9 @@ int ParseInput(short passed, SensorInfo point_data, int input_index){
 			data_point = &point_data.data_array[point_data.sample_number];
 			StoreInput(data_point, measurement, 13);
 			ProcessData(data_point);
-			AccelAngle(point_data);
-			ComplementaryFilter(point_data);
-			GraphData(passed, point_data);
+			//AccelAngle(point_data);
+			//ComplementaryFilter(point_data);
+			//GraphData(passed, point_data);
 			if(point_data.cali_active){
 				CalibrationRoutine(data_point);
 			}
@@ -213,9 +213,9 @@ void my_handler(int s){
 	gnuplot_close(plot_handle_thigh);
 	gnuplot_close(plot_handle_chest_angle);
 	gnuplot_close(plot_handle_thigh_angle);
-//			printf("Closing logfile...\n");
-//			fclose(logfile);
-//			printf("Logfile closed\n");
+			printf("Closing logfile...\n");
+			fclose(logfile);
+			printf("Logfile closed\n");
     printf("exiting %d\n",s);
     exit(1);
 }
@@ -273,8 +273,8 @@ int main(){
 	ConnectSerialPort();
 	Initialize();
 
-//	OpenFile();
-//	printf("Opened log file\n");
+	OpenFile();
+	printf("Opened log file\n");
 	struct sigaction SIGINTHANDLER;
 	SIGINTHANDLER.sa_handler = my_handler;
 	sigemptyset(&SIGINTHANDLER.sa_mask);
