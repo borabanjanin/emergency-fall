@@ -10,7 +10,7 @@
  ***********************************************
  ***********************************************/
 
-#define DEBUG
+//#define DEBUG
 
 #include "rs232.h"
 #include "main.h"
@@ -19,7 +19,7 @@
 #include <stdio.h>
 
 #define CPORTNUMBER 22
-#define BDRATE 38400
+#define BDRATE 9600
 #define CHEST 0
 #define THIGH 1
 
