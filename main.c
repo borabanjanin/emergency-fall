@@ -19,7 +19,7 @@
 #include <stdio.h>
 
 #define CPORTNUMBER 22
-#define BDRATE 9600
+#define BDRATE 38400
 #define CHEST 0
 #define THIGH 1
 
