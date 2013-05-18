@@ -50,6 +50,7 @@ SensorInfo thigh_info;
 //Sample chest_samples[1000];
 //Sample thigh_samples[1000];
 Sample* data_point;
+SensorInfo* sensor_ptr;
 double accel_array[1000];
 FILE *logfile;
 gnuplot_ctrl * plot_handle_chest;

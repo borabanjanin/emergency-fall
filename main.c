@@ -10,7 +10,7 @@
  ***********************************************
  ***********************************************/
 
-//#define DEBUG
+#define DEBUG
 
 #include "rs232.h"
 #include "main.h"
@@ -96,12 +96,14 @@ int StoreInput(Sample* point, signed int measurement, short type_input){
 				point->zrot = measurement;
 				break;
 			case 13:
+				/*
 					fprintf(logfile,"%i ",point->xaccel);
 					fprintf(logfile,"%i ",point->yaccel);
 					fprintf(logfile,"%i ",point->zaccel);
 					fprintf(logfile,"%i ",point->xrot);
 					fprintf(logfile,"%i ",point->yrot);
 					fprintf(logfile,"%i \n",point->zrot);
+				*/
 				break;
 		}
 
@@ -134,37 +136,45 @@ int callNMA(){
 #endif
 
 
-int ParseInput(short passed, SensorInfo point_data, int input_index){
+int ParseInput(short passed, SensorInfo* point_data, int input_index){
 	signed int measurement;
 	signed int sign_exten_mask = 0x00008000;
 	while(input_index < buffersize){
 		char inputbyte =  buf[input_index];
-		if(point_data.type_input == 1 || point_data.type_input == 3 || point_data.type_input == 5
-				|| point_data.type_input == 7 || point_data.type_input == 9 || point_data.type_input == 11){
+		if(point_data->type_input == 1 || point_data->type_input == 3 || point_data->type_input == 5
+				|| point_data->type_input == 7 || point_data->type_input == 9 || point_data->type_input == 11){
 			measurement = (inputbyte & 0x000000FF) << 8;
-			point_data.type_input = point_data.type_input + 1;
-		}else if(point_data.type_input == 2 || point_data.type_input == 4 || point_data.type_input ==  6 || point_data.type_input ==  8
-				|| point_data.type_input ==  10 || point_data.type_input ==  12){
+			point_data->type_input = point_data->type_input + 1;
+		}else if(point_data->type_input == 2 || point_data->type_input == 4 || point_data->type_input ==  6 || point_data->type_input ==  8
+				|| point_data->type_input ==  10 || point_data->type_input ==  12){
 			measurement |= inputbyte & 0x000000FF;
 			if(sign_exten_mask & measurement){
 				measurement |= 0xFFFF0000;
 			}
 
-			data_point = &point_data.data_array[point_data.sample_number];
-			StoreInput(data_point, measurement, point_data.type_input);
-			point_data.type_input = point_data.type_input + 1;
+			data_point = &point_data->data_array[point_data->sample_number];
+			StoreInput(data_point, measurement, point_data->type_input);
+			point_data->type_input = point_data->type_input + 1;
 		}
-		if(point_data.type_input == 13){
-			data_point = &point_data.data_array[point_data.sample_number];
+		if(point_data->type_input == 13){
+
 			StoreInput(data_point, measurement, 13);
 			ProcessData(data_point);
-			//AccelAngle(point_data);
-			//ComplementaryFilter(point_data);
+			printf("pre accel angle: %f %f %f \n",point_data->xangle_accel,point_data->yangle_accel,point_data->zangle_accel);
+			AccelAngle(point_data, data_point);
+			printf("pre accel angle: %f %f %f \n",point_data->xangle_accel,point_data->yangle_accel,point_data->zangle_accel);
+			printf("pre comp angle: %f %f %f \n",point_data->xangle_comp,point_data->yangle_comp,point_data->zangle_comp);
+			ComplementaryFilter(point_data, data_point);
+			//fprintf(logfile,"accel angle: %f %f %f \n",point_data.xangle_accel,point_data.yangle_accel,point_data.zangle_accel);
+			//fprintf(logfile,"comp angle: %f %f %f \n",point_data.xangle_comp,point_data.yangle_comp,point_data.zangle_comp);
+			//printf("accel angle: %f %f %f \n",point_data.xangle_accel,point_data.yangle_accel,point_data.zangle_accel);
+			printf("post comp angle: %f %f %f \n\n",point_data->xangle_comp,point_data->yangle_comp,point_data->zangle_comp);
+
 			//GraphData(passed, point_data);
-			if(point_data.cali_active){
+			if(point_data->cali_active){
 				CalibrationRoutine(data_point);
 			}
-			point_data.type_input = 0;
+			point_data->type_input = 0;
 			return input_index;
 		}
 		input_index++;
@@ -184,7 +194,7 @@ int ProcessInput(){
 				thigh_info.sample_number = 0;
 			}
 			i++;
-			i = ParseInput(THIGH, thigh_info, i);
+			i = ParseInput(THIGH, &thigh_info, i);
 		}
 		inputbyte =  buf[i];
 		if(inputbyte == 77){
@@ -202,7 +212,7 @@ int ProcessInput(){
 				chest_info.sample_number = 0;
 			}
 			i++;
-			i = ParseInput(CHEST, chest_info, i);
+			i = ParseInput(CHEST, &chest_info, i);
 		}
 	}
 	return 0;
@@ -225,31 +235,31 @@ int FakeData(){
 	for(i = 0; i < size; i++){
 		buf[index++] = 'M';
 		buf[index++] = 'B';
+		buf[index++] = 36;
+		buf[index++] = 21;
+		buf[index++] = 36;
+		buf[index++] = 21;
+		buf[index++] = 36;
+		buf[index++] = 21;
+		buf[index++] = 0;
 		buf[index++] = 255;
-		buf[index++] = 248;
+		buf[index++] = 0;
 		buf[index++] = 255;
-		buf[index++] = 247;
+		buf[index++] = 0;
 		buf[index++] = 255;
-		buf[index++] = 246;
-		buf[index++] = 255;
-		buf[index++] = 245;
-		buf[index++] = 255;
-		buf[index++] = 245;
-		buf[index++] = 255;
-		buf[index++] = 244;
 		buf[index++] = 'U';
+		buf[index++] = 36;
+		buf[index++] = 21;
+		buf[index++] = 36;
+		buf[index++] = 21;
+		buf[index++] = 36;
+		buf[index++] = 21;
+		buf[index++] = 0;
 		buf[index++] = 255;
-		buf[index++] = 254;
+		buf[index++] = 0;
 		buf[index++] = 255;
-		buf[index++] = 253;
+		buf[index++] = 0;
 		buf[index++] = 255;
-		buf[index++] = 252;
-		buf[index++] = 255;
-		buf[index++] = 251;
-		buf[index++] = 255;
-		buf[index++] = 250;
-		buf[index++] = 255;
-		buf[index++] = 249;
 	};
 	return size * 27;
 }

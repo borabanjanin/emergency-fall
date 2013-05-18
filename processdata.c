@@ -128,39 +128,38 @@ int CalibrationRoutine(Sample* point){
 }
 
 
-int AccelAngle(SensorInfo point_data){
-	Sample* point = &point_data.data_array[point_data.sample_number];
+int AccelAngle(SensorInfo* sensor, Sample* point){
 	double xaccel = (double)point->xaccel;
 	double yaccel = (double)point->yaccel;
 	double zaccel = (double)point->zaccel;
 
-	point_data.xangle_accel = acos(xaccel/(point->accel))*180.0/PI;
-	point_data.yangle_accel = acos(yaccel/(point->accel))*180.0/PI;
-	point_data.zangle_accel = acos(zaccel/(point->accel))*180.0/PI;
-	//printf("accel angle: %f %f %f \n",sensor.xangle_accel,sensor.yangle_accel,sensor.zangle_accel);
+	sensor->xangle_accel = acos(xaccel/(point->accel))*180.0/PI;
+	sensor->yangle_accel = acos(yaccel/(point->accel))*180.0/PI;
+	sensor->zangle_accel = acos(zaccel/(point->accel))*180.0/PI;
 
 	return 0;
 }
 
 
-int ComplementaryFilter(SensorInfo point_data) {
+int ComplementaryFilter(SensorInfo* sensor, Sample* point) {
 	double time_constant = 0.97;
 
-	double x_ang_vel = (double)point_data.data_array[point_data.sample_number].xrot;
+	//printf("Pre comp angle: %f %f %f \n\n",sensor->xangle_comp,sensor->yangle_comp,sensor->zangle_comp);
+	double x_ang_vel = (double)sensor->data_array[sensor->sample_number].xrot;
 	x_ang_vel = 250 * x_ang_vel/32767.5;
-	point_data.xangle_comp = time_constant * (point_data.xangle_comp * x_ang_vel * point_data.dt) + (1 - time_constant) * point_data.xangle_accel;
+	sensor->xangle_comp = time_constant * (sensor->xangle_comp * x_ang_vel * sensor->dt) + (1 - time_constant) * sensor->xangle_accel;
 
-	double y_ang_vel = (double)point_data.data_array[point_data.sample_number].yrot;
+	double y_ang_vel = (double)sensor->data_array[sensor->sample_number].yrot;
 	y_ang_vel = 250 * y_ang_vel/32767.5;
-	point_data.yangle_comp = time_constant * (point_data.yangle_comp * y_ang_vel * point_data.dt) + (1 - time_constant) * point_data.yangle_accel;
+	sensor->yangle_comp = time_constant * (sensor->yangle_comp * y_ang_vel * sensor->dt) + (1 - time_constant) * sensor->yangle_accel;
 
-	double z_ang_vel = (double)point_data.data_array[point_data.sample_number].zrot;
+	double z_ang_vel = (double)sensor->data_array[sensor->sample_number].zrot;
 	z_ang_vel = 250 * z_ang_vel/32767.5;
-	point_data.zangle_comp = time_constant * (point_data.zangle_comp * z_ang_vel * point_data.dt) + (1 - time_constant) * point_data.zangle_accel;
+	sensor->zangle_comp = time_constant * (sensor->zangle_comp * z_ang_vel * sensor->dt) + (1 - time_constant) * sensor->zangle_accel;
 
-	printf("accel_vel: %f %f %f \n ", point_data.xangle_accel, point_data.yangle_accel, point_data.zangle_accel);
-	printf("ang_vel: %f %f %f \n", x_ang_vel, y_ang_vel, z_ang_vel);
-	printf("comp angle: %f %f %f \n",point_data.xangle_comp,point_data.yangle_comp,point_data.zangle_comp);
+	//printf("accel_vel: %f %f %f \n ", sensor->xangle_accel, sensor->yangle_accel, sensor->zangle_accel);
+	//printf("ang_vel: %f %f %f \n", x_ang_vel, y_ang_vel, z_ang_vel);
+	//printf("Post comp angle: %f %f %f \n\n",sensor->xangle_comp,sensor->yangle_comp,sensor->zangle_comp);
 	return 0;
 
 }
