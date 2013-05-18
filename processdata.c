@@ -9,8 +9,10 @@
 #define TRUE 1
 #define FALSE 0
 #define PI 3.14159265
-//#define PLOTCHESTANGLE
+#define PLOTCHESTANGLE
 //#define PLOTTHIGHANGLE
+//#define PLOTCHESTACCEL
+//#define PLOTCHESTACCEL
 
 
 
@@ -42,9 +44,10 @@ Sample* ProcessData(Sample* point){
 	return point;
 }
 
-int GraphData(short sensor_id, SensorInfo point_data){
-	Sample* point = &point_data.data_array[point_data.sample_number];
+int GraphData(short sensor_id, SensorInfo* point_data, Sample* point){
+
 	if(CHEST == sensor_id){
+#ifdef  PLOTCHESTACCEl
 		accel_chest[chest_sample] = (point->accel)/16000;
 		gnuplot_resetplot(plot_handle_chest);
 		gnuplot_set_xlabel(plot_handle_chest, "Chest Accel g/s");
@@ -55,7 +58,29 @@ int GraphData(short sensor_id, SensorInfo point_data){
 		}else{
 			gnuplot_plot_x(plot_handle_chest, accel_chest, 25, "test");
 		}
+#endif
 
+#ifdef PLOTCHESTANGLE
+		printf("thigh angle plotting\n");
+		x_angle_chest[chest_sample] = point_data->xangle_comp;
+		y_angle_chest[chest_sample] = point_data->yangle_comp;
+		z_angle_chest[chest_sample] = point_data->zangle_comp;
+
+		gnuplot_resetplot(plot_handle_chest_angle);
+		gnuplot_set_xlabel(plot_handle_chest_angle, "Chest Angle");
+		gnuplot_cmd(plot_handle_chest_angle, "set yrange [-180:180]");
+		gnuplot_setstyle(plot_handle_chest_angle, "lines");
+
+		if(FALSE == thigh_samples_fill){
+			gnuplot_plot_x(plot_handle_chest_angle, x_angle_chest, chest_sample, "x angle");
+			gnuplot_plot_x(plot_handle_chest_angle, y_angle_chest, chest_sample, "y angle");
+			gnuplot_plot_x(plot_handle_chest_angle, z_angle_chest, chest_sample, "z angle");
+		}else{
+			gnuplot_plot_x(plot_handle_chest_angle, x_angle_chest, 25, "x angle");
+			gnuplot_plot_x(plot_handle_chest_angle, y_angle_chest, 25, "y angle");
+			gnuplot_plot_x(plot_handle_chest_angle, z_angle_chest, 25, "z angle");
+		}
+#endif
 		if(chest_sample < 24){
 			chest_sample++;
 		}else{
@@ -65,39 +90,41 @@ int GraphData(short sensor_id, SensorInfo point_data){
 	}
 
 	if(THIGH == sensor_id){
+#ifdef PLOTTHIGHACCEl
 		accel_thigh[thigh_sample] = (point->accel)/16000;
 		gnuplot_resetplot(plot_handle_thigh);
 		gnuplot_set_xlabel(plot_handle_thigh, "Thigh Accel g/s");
 		gnuplot_cmd(plot_handle_thigh, "set yrange [0:2]");
 		gnuplot_setstyle(plot_handle_thigh, "lines");
 
-		#ifdef PLOTTHIGHANGLE
-		printf("thigh angle plotting\n");
-		x_angle_thigh[thigh_sample] = point_data.xangle_comp;
-		y_angle_thigh[thigh_sample] = point_data.yangle_comp;
-		z_angle_thigh[thigh_sample] = point_data.zangle_comp;
-
-		gnuplot_set_xlabel(plot_handle_thigh_angle, "Thigh Angle");
-		gnuplot_cmd(plot_handle_thigh_angle, "set yrange [0:2]");
-		gnuplot_setstyle(plot_handle_thigh_angle, "lines");
-
-		if(FALSE == thigh_samples_fill){
-			gnuplot_plot_x(plot_handle_thigh_angle, x_angle_thigh, thigh_sample, "test");
-			gnuplot_plot_x(plot_handle_thigh_angle, y_angle_thigh, thigh_sample, "test");
-			gnuplot_plot_x(plot_handle_thigh_angle, z_angle_thigh, thigh_sample, "test");
-		}else{
-			gnuplot_plot_x(plot_handle_thigh_angle, x_angle_thigh, 25, "test");
-			gnuplot_plot_x(plot_handle_thigh_angle, y_angle_thigh, 25, "test");
-			gnuplot_plot_x(plot_handle_thigh_angle, z_angle_thigh, 25, "test");
-		}
-
-		#endif
-
 		 if(FALSE == thigh_samples_fill){
 			gnuplot_plot_x(plot_handle_thigh, accel_thigh, thigh_sample, "test");
 		}else{
 			gnuplot_plot_x(plot_handle_thigh, accel_thigh, 25, "test");
 		}
+#endif
+
+#ifdef PLOTTHIGHANGLE
+		printf("thigh angle plotting\n");
+		x_angle_thigh[thigh_sample] = point_data->xangle_comp;
+		y_angle_thigh[thigh_sample] = point_data->yangle_comp;
+		z_angle_thigh[thigh_sample] = point_data->zangle_comp;
+
+		gnuplot_resetplot(plot_handle_thigh_angle);
+		gnuplot_set_xlabel(plot_handle_thigh_angle, "Thigh Angle");
+		gnuplot_cmd(plot_handle_thigh_angle, "set yrange [-180:180]");
+		gnuplot_setstyle(plot_handle_thigh_angle, "lines");
+
+		if(FALSE == thigh_samples_fill){
+			gnuplot_plot_x(plot_handle_thigh_angle, x_angle_thigh, thigh_sample, "x angle");
+			gnuplot_plot_x(plot_handle_thigh_angle, y_angle_thigh, thigh_sample, "y angle");
+			gnuplot_plot_x(plot_handle_thigh_angle, z_angle_thigh, thigh_sample, "z angle");
+		}else{
+			gnuplot_plot_x(plot_handle_thigh_angle, x_angle_thigh, 25, "x angle");
+			gnuplot_plot_x(plot_handle_thigh_angle, y_angle_thigh, 25, "y angle");
+			gnuplot_plot_x(plot_handle_thigh_angle, z_angle_thigh, 25, "z angle");
+		}
+#endif
 
 		if(thigh_sample < 24){
 			thigh_sample++;

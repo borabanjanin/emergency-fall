@@ -160,17 +160,9 @@ int ParseInput(short passed, SensorInfo* point_data, int input_index){
 
 			StoreInput(data_point, measurement, 13);
 			ProcessData(data_point);
-			printf("pre accel angle: %f %f %f \n",point_data->xangle_accel,point_data->yangle_accel,point_data->zangle_accel);
 			AccelAngle(point_data, data_point);
-			printf("pre accel angle: %f %f %f \n",point_data->xangle_accel,point_data->yangle_accel,point_data->zangle_accel);
-			printf("pre comp angle: %f %f %f \n",point_data->xangle_comp,point_data->yangle_comp,point_data->zangle_comp);
 			ComplementaryFilter(point_data, data_point);
-			//fprintf(logfile,"accel angle: %f %f %f \n",point_data.xangle_accel,point_data.yangle_accel,point_data.zangle_accel);
-			//fprintf(logfile,"comp angle: %f %f %f \n",point_data.xangle_comp,point_data.yangle_comp,point_data.zangle_comp);
-			//printf("accel angle: %f %f %f \n",point_data.xangle_accel,point_data.yangle_accel,point_data.zangle_accel);
-			printf("post comp angle: %f %f %f \n\n",point_data->xangle_comp,point_data->yangle_comp,point_data->zangle_comp);
-
-			//GraphData(passed, point_data);
+			GraphData(passed, point_data, data_point);
 			if(point_data->cali_active){
 				CalibrationRoutine(data_point);
 			}
@@ -188,13 +180,13 @@ int ProcessInput(){
 		char inputbyte =  buf[i];
 		if(inputbyte == 85){
 			thigh_info.type_input = 1;
+			i++;
+			i = ParseInput(THIGH, &thigh_info, i);
 			if(thigh_info.sample_number < 999){
 				thigh_info.sample_number++;
 			}else{
 				thigh_info.sample_number = 0;
 			}
-			i++;
-			i = ParseInput(THIGH, &thigh_info, i);
 		}
 		inputbyte =  buf[i];
 		if(inputbyte == 77){
@@ -206,13 +198,13 @@ int ProcessInput(){
 			}else{
 				chest_info.cali_active = 0;
 			}
+			i++;
+			i = ParseInput(CHEST, &chest_info, i);
 			if(chest_info.sample_number < 999){
 				chest_info.sample_number++;
 			}else{
 				chest_info.sample_number = 0;
 			}
-			i++;
-			i = ParseInput(CHEST, &chest_info, i);
 		}
 	}
 	return 0;
