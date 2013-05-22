@@ -61,7 +61,7 @@ int GraphData(short sensor_id, SensorInfo* point_data, Sample* point){
 #endif
 
 #ifdef PLOTCHESTANGLE
-		printf("thigh angle plotting\n");
+		printf("chest angle plotting\n");
 		x_angle_chest[chest_sample] = point_data->xangle_comp;
 		y_angle_chest[chest_sample] = point_data->yangle_comp;
 		z_angle_chest[chest_sample] = point_data->zangle_comp;
@@ -71,7 +71,7 @@ int GraphData(short sensor_id, SensorInfo* point_data, Sample* point){
 		gnuplot_cmd(plot_handle_chest_angle, "set yrange [-180:180]");
 		gnuplot_setstyle(plot_handle_chest_angle, "lines");
 
-		if(FALSE == thigh_samples_fill){
+		if(FALSE == chest_samples_fill){
 			gnuplot_plot_x(plot_handle_chest_angle, x_angle_chest, chest_sample, "x angle");
 			gnuplot_plot_x(plot_handle_chest_angle, y_angle_chest, chest_sample, "y angle");
 			gnuplot_plot_x(plot_handle_chest_angle, z_angle_chest, chest_sample, "z angle");
