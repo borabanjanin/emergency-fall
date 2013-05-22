@@ -285,7 +285,7 @@ int main(){
 
 	while(1){
 
-		printf("Polling comport...\n");
+		//printf("Polling comport...\n");
 #ifndef DEBUG
 		buffersize = RS232_PollComport(CPORTNUMBER, buf, 4095);
 #else
