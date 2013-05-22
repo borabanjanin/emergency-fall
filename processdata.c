@@ -9,7 +9,7 @@
 #define TRUE 1
 #define FALSE 0
 #define PI 3.14159265
-#define PLOTCHESTANGLE
+//#define PLOTCHESTANGLE
 //#define PLOTTHIGHANGLE
 //#define PLOTCHESTACCEL
 //#define PLOTCHESTACCEL
@@ -186,7 +186,7 @@ int ComplementaryFilter(SensorInfo* sensor, Sample* point) {
 
 	//printf("accel_vel: %f %f %f \n ", sensor->xangle_accel, sensor->yangle_accel, sensor->zangle_accel);
 	//printf("ang_vel: %f %f %f \n", x_ang_vel, y_ang_vel, z_ang_vel);
-	//printf("Post comp angle: %f %f %f \n\n",sensor->xangle_comp,sensor->yangle_comp,sensor->zangle_comp);
+	printf("Post comp angle: %f %f %f \n\n",sensor->xangle_comp,sensor->yangle_comp,sensor->zangle_comp);
 	return 0;
 
 }
