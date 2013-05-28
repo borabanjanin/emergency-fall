@@ -247,7 +247,7 @@ int FallDetection(short sensor_id, SensorInfo* sensor, Sample* point){
 	if(sensor->data_fill){
 		if(sensor_id == CHEST){
 			if(sensor->sample_number == (++last_sample_chest%1000)){
-				if((sensor->moving_accel)>(cali_chest.one_g*.4)){
+				if((sensor->moving_accel)>(cali_chest.one_g*1.4)){
 					fall_detected = TRUE;
 				}
 				if((sensor->moving_ang)>60){
@@ -257,7 +257,7 @@ int FallDetection(short sensor_id, SensorInfo* sensor, Sample* point){
 			last_sample_chest = sensor->sample_number;
 		}else if(sensor_id == THIGH){
 			if(sensor->sample_number == (++last_sample_thigh%1000)){
-				if((sensor->moving_accel)>(cali_chest.one_g*.4)){
+				if((sensor->moving_accel)>(cali_chest.one_g*1.4)){
 					fall_detected = TRUE;
 				}
 				if((sensor->moving_ang)>60){

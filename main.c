@@ -10,7 +10,7 @@
  ***********************************************
  ***********************************************/
 
-//#define DEBUG
+#define DEBUG
 
 #include "rs232.h"
 #include "main.h"
@@ -163,11 +163,11 @@ int ParseInput(short passed, SensorInfo* point_data, int input_index){
 			AccelAngle(point_data, data_point);
 			ComplementaryFilter(point_data, data_point);
 			MovingAverage(point_data, data_point);
-			FallDetection(passed, point_data, data_point);
-			GraphData(passed, point_data, data_point);
-			if(point_data->cali_active && passed == CHEST){
+			if(point_data->cali_active && passed == CHEST || passed == CHEST && point_data->data_fill == FALSE){
 				CalibrationRoutine(data_point);
 			}
+			FallDetection(passed, point_data, data_point);
+			GraphData(passed, point_data, data_point);
 			point_data->type_input = 0;
 			return input_index;
 		}
