@@ -16,6 +16,7 @@ typedef struct Sample{
 	int yrot;
 	int zrot;
 	double accel;
+	double ang_accel;
 
 }Sample;
 
@@ -31,6 +32,13 @@ typedef struct SensorInfo{
 	double xangle_comp;
 	double yangle_comp;
 	double zangle_comp;
+	double moving_accel;
+	double moving_accel_array[3];
+	double moving_ang;
+	double moving_ang_array[3];
+	short moving_index;
+	short data_fill;
+
 }SensorInfo;
 
 typedef struct CalibrateInfo{

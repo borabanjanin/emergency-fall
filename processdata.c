@@ -11,8 +11,8 @@
 #define PI 3.14159265
 //#define PLOTCHESTANGLE
 //#define PLOTTHIGHANGLE
-//#define PLOTCHESTACCEL
-//#define PLOTCHESTACCEL
+//#define PLOTTHIGHACCEl
+//#define PLOTCHESTACCEl
 
 
 
@@ -24,6 +24,8 @@ double z_angle_chest[25];
 double x_angle_thigh[25];
 double y_angle_thigh[25];
 double z_angle_thigh[25];
+double accel_avg_thigh[3];
+double accel_avg_chest[3];
 
 int chest_sample = 0;
 int thigh_sample = 0;
@@ -31,6 +33,7 @@ short chest_samples_fill = FALSE;
 short thigh_samples_fill = FALSE;
 extern gnuplot_ctrl * plot_handle_chest;
 extern gnuplot_ctrl * plot_handle_thigh;
+
 
 Sample* ProcessData(Sample* point){
 	double xaccelsq = (double) point->xaccel;
@@ -54,7 +57,7 @@ int GraphData(short sensor_id, SensorInfo* point_data, Sample* point){
 		gnuplot_cmd(plot_handle_chest, "set yrange [0:2]");
 		gnuplot_setstyle(plot_handle_chest, "lines");
 		 if(FALSE == chest_samples_fill){
-			gnuplot_plot_x(plot_handle_chest, accel_chest, chest_sample, "test");
+			gnuplot_plot_x(plot_handle_chest, accel_chest, chest_sample, "Chest Accel");
 		}else{
 			gnuplot_plot_x(plot_handle_chest, accel_chest, 25, "test");
 		}
@@ -159,18 +162,23 @@ int AccelAngle(SensorInfo* sensor, Sample* point){
 	double xaccel = (double)point->xaccel;
 	double yaccel = (double)point->yaccel;
 	double zaccel = (double)point->zaccel;
-
+	//printf("accel %f %f %f \n", xaccel, yaccel, zaccel);
 	sensor->xangle_accel = acos(xaccel/(point->accel))*180.0/PI;
 	sensor->yangle_accel = acos(yaccel/(point->accel))*180.0/PI;
 	sensor->zangle_accel = acos(zaccel/(point->accel))*180.0/PI;
-
+	//printf("xyzrot %d %d %d \n", point->xrot,point->yrot,point->zrot);
+	double xrot_sq = pow((double)point->xrot,2.0);
+	double yrot_sq = pow((double)point->yrot,2.0);
+	double zrot_sq = pow((double)point->zrot,2.0);
+	point->ang_accel = sqrt(xrot_sq + yrot_sq + zrot_sq);
+	//printf("%f \n",point->ang_accel);
 	return 0;
 }
 
 int ComplementaryFilter(SensorInfo* sensor, Sample* point) {
 	double time_constant = 0.50;
 
-	printf("Pre comp angle: %f %f %f \n\n",sensor->xangle_comp,sensor->yangle_comp,sensor->zangle_comp);
+	//printf("Pre comp angle: %f %f %f \n\n",sensor->xangle_comp,sensor->yangle_comp,sensor->zangle_comp);
 	double x_ang_vel = (double)sensor->data_array[sensor->sample_number].xrot;
 	x_ang_vel = 250 * x_ang_vel/32767.5;
 	sensor->xangle_comp = time_constant * (sensor->xangle_comp * x_ang_vel * sensor->dt) + (1 - time_constant) * sensor->xangle_accel;
@@ -183,11 +191,57 @@ int ComplementaryFilter(SensorInfo* sensor, Sample* point) {
 	z_ang_vel = 250 * z_ang_vel/32767.5;
 	sensor->zangle_comp = time_constant * (sensor->zangle_comp * z_ang_vel * sensor->dt) + (1 - time_constant) * sensor->zangle_accel;
 
-	printf("accel_vel: %f %f %f \n ", sensor->xangle_accel, sensor->yangle_accel, sensor->zangle_accel);
-	printf("ang_vel: %f %f %f \n", x_ang_vel, y_ang_vel, z_ang_vel);
-	printf("Post comp angle: %f %f %f \n\n",sensor->xangle_comp,sensor->yangle_comp,sensor->zangle_comp);
+	//printf("accel_vel: %f %f %f \n ", sensor->xangle_accel, sensor->yangle_accel, sensor->zangle_accel);
+	//printf("ang_vel: %f %f %f \n", x_ang_vel, y_ang_vel, z_ang_vel);
+	//printf("Post comp angle: %f %f %f \n\n",sensor->xangle_comp,sensor->yangle_comp,sensor->zangle_comp);
 	return 0;
+}
+
+
+//double moving_accel;
+//double moving_accel_array[3];
+//short moving_accel_index;
+//short data_fill;
+//double moving_ang;
+//double moving_ang_array[3];
+
+
+int MovingAverage(SensorInfo* sensor, Sample* point){
+	if(sensor->sample_number < 3 &&  sensor->data_fill == FALSE){
+		if(sensor->sample_number == 0){
+			sensor->moving_accel = point-> accel;
+			sensor->moving_accel_array[0] = point-> accel;
+			sensor->moving_ang = point-> ang_accel;
+			sensor->moving_ang_array[0] = point-> ang_accel;
+		}else if(sensor->sample_number == 1){
+			sensor->moving_accel_array[1] = point-> accel;
+			sensor->moving_accel = (sensor->moving_accel_array[1] + sensor->moving_accel_array[0])/2;
+			sensor->moving_ang_array[1] = point-> ang_accel;
+			sensor->moving_ang = (sensor->moving_ang_array[1] + sensor->moving_ang_array[0])/2;
+		}else if(sensor->sample_number == 2){
+			sensor->moving_ang_array[2] = point-> ang_accel;
+			sensor->moving_ang = (sensor->moving_ang_array[2] + sensor->moving_ang_array[1] + sensor->moving_ang_array[0])/3;
+			sensor->moving_index = 0;
+			sensor->data_fill == TRUE;
+		}
+	}else{
+		sensor->moving_accel_array[sensor->moving_index] = point-> accel;
+		sensor->moving_accel = (sensor->moving_accel_array[0] + sensor->moving_accel_array[1] + sensor->moving_accel_array[2])/3;
+		sensor->moving_ang_array[sensor->moving_index] = point-> ang_accel;
+		sensor->moving_ang = (sensor->moving_ang_array[0] + sensor->moving_ang_array[1] + sensor->moving_ang_array[2])/3;
+		sensor->moving_index = ++(sensor->moving_index)%3;
+	}
+
+	printf("%f\n",sensor->moving_ang);
+	return 0;
+}
+
+int FallDetection(){
+
 
 }
+
+
+
 
 #endif

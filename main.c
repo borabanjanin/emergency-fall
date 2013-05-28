@@ -10,7 +10,7 @@
  ***********************************************
  ***********************************************/
 
-//#define DEBUG
+#define DEBUG
 
 #include "rs232.h"
 #include "main.h"
@@ -97,12 +97,12 @@ int StoreInput(Sample* point, signed int measurement, short type_input){
 				break;
 			case 13:
 				/*
-					fprintf(logfile,"%i ",point->xaccel);
-					fprintf(logfile,"%i ",point->yaccel);
-					fprintf(logfile,"%i ",point->zaccel);
-					fprintf(logfile,"%i ",point->xrot);
-					fprintf(logfile,"%i ",point->yrot);
-					fprintf(logfile,"%i \n",point->zrot);
+					printf("%i ",point->xaccel);
+					printf("%i ",point->yaccel);
+					printf("%i ",point->zaccel);
+					printf("%i ",point->xrot);
+					printf("%i ",point->yrot);
+					printf("%i \n",point->zrot);
 				*/
 				break;
 		}
@@ -162,6 +162,7 @@ int ParseInput(short passed, SensorInfo* point_data, int input_index){
 			ProcessData(data_point);
 			AccelAngle(point_data, data_point);
 			ComplementaryFilter(point_data, data_point);
+			MovingAverage(point_data, data_point);
 			GraphData(passed, point_data, data_point);
 			if(point_data->cali_active){
 				CalibrationRoutine(data_point);
@@ -227,30 +228,30 @@ int FakeData(){
 	for(i = 0; i < size; i++){
 		buf[index++] = 'M';
 		buf[index++] = 'B';
-		buf[index++] = 36;
-		buf[index++] = 21;
-		buf[index++] = 36;
-		buf[index++] = 21;
-		buf[index++] = 36;
-		buf[index++] = 21;
-		buf[index++] = 0;
 		buf[index++] = 255;
-		buf[index++] = 0;
 		buf[index++] = 255;
-		buf[index++] = 0;
+		buf[index++] = 255;
+		buf[index++] = 255;
+		buf[index++] = 255;
+		buf[index++] = 255;
+		buf[index++] = 255;
+		buf[index++] = 255;
+		buf[index++] = 255;
+		buf[index++] = 255;
+		buf[index++] = 255;
 		buf[index++] = 255;
 		buf[index++] = 'U';
-		buf[index++] = 36;
-		buf[index++] = 21;
-		buf[index++] = 36;
-		buf[index++] = 21;
-		buf[index++] = 36;
-		buf[index++] = 21;
-		buf[index++] = 0;
 		buf[index++] = 255;
-		buf[index++] = 0;
 		buf[index++] = 255;
-		buf[index++] = 0;
+		buf[index++] = 255;
+		buf[index++] = 255;
+		buf[index++] = 255;
+		buf[index++] = 255;
+		buf[index++] = 255;
+		buf[index++] = 255;
+		buf[index++] = 255;
+		buf[index++] = 255;
+		buf[index++] = 255;
 		buf[index++] = 255;
 	};
 	return size * 27;
@@ -268,6 +269,8 @@ int Initialize(){
 	char userinput = '!';
 	chest_info.cali_active = FALSE;
 	chest_info.type_input = 0;
+	chest_info.data_fill = FALSE;
+	thigh_info.data_fill = FALSE;
 	return 0;
 }
 
