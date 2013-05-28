@@ -224,7 +224,8 @@ int MovingAverage(SensorInfo* sensor, Sample* point){
 			sensor->moving_ang_array[2] = point-> ang_accel;
 			sensor->moving_ang = (sensor->moving_ang_array[2] + sensor->moving_ang_array[1] + sensor->moving_ang_array[0])/3;
 			sensor->moving_index = 0;
-			sensor->data_fill == TRUE;
+			sensor->data_fill = TRUE;
+			//printf("hit");
 		}
 	}else{
 		sensor->moving_accel_array[sensor->moving_index] = point-> accel;
@@ -233,18 +234,17 @@ int MovingAverage(SensorInfo* sensor, Sample* point){
 		sensor->moving_ang = (sensor->moving_ang_array[0] + sensor->moving_ang_array[1] + sensor->moving_ang_array[2])/3;
 		sensor->moving_index = ++(sensor->moving_index)%3;
 	}
-
+	//printf("Data Fill: %d\n",sensor->data_fill);
 	//printf("%f\n",sensor->moving_ang);
+	//printf("sample number: %d",sensor->sample_number);
 	return 0;
 }
 
 short fall_detected = FALSE;
-int FallDetection(short sensor_id, SensorInfo* sensor, Sample* point){
-
+int FallDetection(short sensor_id, SensorInfo* sensor, Sample* point){	
 	static int last_sample_chest;
 	static int last_sample_thigh;
 	if(sensor->data_fill){
-		printf("entering fall routine\n");
 		if(sensor_id == CHEST){
 			if(sensor->sample_number == (++last_sample_chest%1000)){
 				if((sensor->moving_accel)>(cali_chest.one_g*.4)){
@@ -256,7 +256,6 @@ int FallDetection(short sensor_id, SensorInfo* sensor, Sample* point){
 			}
 			last_sample_chest = sensor->sample_number;
 		}else if(sensor_id == THIGH){
-			printf("thigh fall routine\n");
 			if(sensor->sample_number == (++last_sample_thigh%1000)){
 				if((sensor->moving_accel)>(cali_chest.one_g*.4)){
 					fall_detected = TRUE;
