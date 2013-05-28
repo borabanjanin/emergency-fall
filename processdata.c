@@ -235,7 +235,8 @@ int MovingAverage(SensorInfo* sensor, Sample* point){
 		sensor->moving_index = ++(sensor->moving_index)%3;
 	}
 	//printf("Data Fill: %d\n",sensor->data_fill);
-	//printf("%f\n",sensor->moving_ang);
+	printf("%f\n",sensor->moving_ang);
+	printf("%f\n",sensor->moving_accel);
 	//printf("sample number: %d",sensor->sample_number);
 	return 0;
 }
