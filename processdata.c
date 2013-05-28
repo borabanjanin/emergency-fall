@@ -167,9 +167,12 @@ int AccelAngle(SensorInfo* sensor, Sample* point){
 	sensor->yangle_accel = acos(yaccel/(point->accel))*180.0/PI;
 	sensor->zangle_accel = acos(zaccel/(point->accel))*180.0/PI;
 	//printf("xyzrot %d %d %d \n", point->xrot,point->yrot,point->zrot);
-	double xrot_sq = pow((double)point->xrot,2.0);
-	double yrot_sq = pow((double)point->yrot,2.0);
-	double zrot_sq = pow((double)point->zrot,2.0);
+	double xrot_sq = 250*(point->xrot)/32767.5;
+	double yrot_sq = 250*(point->yrot)/32767.5;
+	double zrot_sq = 250*(point->zrot)/32767.5;
+	xrot_sq = pow(xrot_sq,2.0);
+	yrot_sq = pow(yrot_sq,2.0);
+	zrot_sq = pow(zrot_sq,2.0);
 	point->ang_accel = sqrt(xrot_sq + yrot_sq + zrot_sq);
 	//printf("%f \n",point->ang_accel);
 	return 0;
@@ -235,9 +238,9 @@ int MovingAverage(SensorInfo* sensor, Sample* point){
 		sensor->moving_index = ++(sensor->moving_index)%3;
 	}
 	//printf("Data Fill: %d\n",sensor->data_fill);
-	printf("%f\n",sensor->moving_ang);
-	printf("%f\n",sensor->moving_accel);
-	//printf("sample number: %d",sensor->sample_number);
+	printf("moving angular: %f\n",sensor->moving_ang);
+	printf("moving accel: %f\n",sensor->moving_accel);
+	//printf("sample number: %d",sensorb->sample_number);
 	return 0;
 }
 
