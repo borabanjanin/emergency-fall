@@ -234,13 +234,38 @@ int MovingAverage(SensorInfo* sensor, Sample* point){
 		sensor->moving_index = ++(sensor->moving_index)%3;
 	}
 
-	printf("%f\n",sensor->moving_ang);
+	//printf("%f\n",sensor->moving_ang);
 	return 0;
 }
 
-int FallDetection(){
+short fall_detected = FALSE;
+int FallDetection(short sensor_id, SensorInfo* sensor, Sample* point){
 
+	static int last_sample_chest;
+	static int last_sample_thigh;
+	if(sensor->data_fill){
+		if(sensor_id == CHEST){
+			if(sensor->sample_number == (++last_sample_chest%1000)){
+				if((sensor->moving_accel)>(cali_chest.one_g*.4)){
+					fall_detected = TRUE;
+				}
+				if((sensor->moving_ang)>60){
+					fall_detected = TRUE;
+				}
+			}
+			last_sample_chest = sensor->sample_number;
+		}else if(sensor_id == THIGH){
+			if(sensor->sample_number == (++last_sample_thigh%1000)){
 
+			}
+
+			last_sample_thigh =sensor->sample_number;
+		}
+	}
+	if(fall_detected == TRUE){
+		printf("FALL DETECTED\n");
+	}
+	return 0;
 }
 
 
