@@ -244,6 +244,7 @@ int FallDetection(short sensor_id, SensorInfo* sensor, Sample* point){
 	static int last_sample_chest;
 	static int last_sample_thigh;
 	if(sensor->data_fill){
+		printf("entering fall routine\n");
 		if(sensor_id == CHEST){
 			if(sensor->sample_number == (++last_sample_chest%1000)){
 				if((sensor->moving_accel)>(cali_chest.one_g*.4)){
@@ -255,8 +256,14 @@ int FallDetection(short sensor_id, SensorInfo* sensor, Sample* point){
 			}
 			last_sample_chest = sensor->sample_number;
 		}else if(sensor_id == THIGH){
+			printf("thigh fall routine\n");
 			if(sensor->sample_number == (++last_sample_thigh%1000)){
-
+				if((sensor->moving_accel)>(cali_chest.one_g*.4)){
+					fall_detected = TRUE;
+				}
+				if((sensor->moving_ang)>60){
+					fall_detected = TRUE;
+				}
 			}
 
 			last_sample_thigh =sensor->sample_number;
