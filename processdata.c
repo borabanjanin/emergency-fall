@@ -225,7 +225,7 @@ int MovingAverage(SensorInfo* sensor, Sample* point){
 			sensor->moving_ang = (sensor->moving_ang_array[1] + sensor->moving_ang_array[0])/2;
 		}else if(sensor->sample_number == 2){
 			sensor->moving_accel_array[2] = point-> accel;
-			sensor->moving_accel = (sensor->moving_accel_array[2] +sensor->moving_accel_array[1] + sensor->moving_accel_array[0])/2;
+			sensor->moving_accel = (sensor->moving_accel_array[2] +sensor->moving_accel_array[1] + sensor->moving_accel_array[0])/3;
 			sensor->moving_ang_array[2] = point-> ang_accel;
 			sensor->moving_ang = (sensor->moving_ang_array[2] + sensor->moving_ang_array[1] + sensor->moving_ang_array[0])/3;
 			sensor->moving_index = 0;
