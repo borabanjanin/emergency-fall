@@ -224,6 +224,8 @@ int MovingAverage(SensorInfo* sensor, Sample* point){
 			sensor->moving_ang_array[1] = point-> ang_accel;
 			sensor->moving_ang = (sensor->moving_ang_array[1] + sensor->moving_ang_array[0])/2;
 		}else if(sensor->sample_number == 2){
+			sensor->moving_accel_array[2] = point-> accel;
+			sensor->moving_accel = (sensor->moving_accel_array[2] +sensor->moving_accel_array[1] + sensor->moving_accel_array[0])/2;
 			sensor->moving_ang_array[2] = point-> ang_accel;
 			sensor->moving_ang = (sensor->moving_ang_array[2] + sensor->moving_ang_array[1] + sensor->moving_ang_array[0])/3;
 			sensor->moving_index = 0;
@@ -238,8 +240,8 @@ int MovingAverage(SensorInfo* sensor, Sample* point){
 		sensor->moving_index = ++(sensor->moving_index)%3;
 	}
 	//printf("Data Fill: %d\n",sensor->data_fill);
-	printf("moving angular: %f\n",sensor->moving_ang);
-	printf("moving accel: %f\n",sensor->moving_accel);
+	//printf("moving angular: %f\n",sensor->moving_ang);
+	//printf("moving accel: %f\n",sensor->moving_accel);
 	//printf("sample number: %d",sensorb->sample_number);
 	return 0;
 }

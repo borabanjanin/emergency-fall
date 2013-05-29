@@ -10,7 +10,7 @@
  ***********************************************
  ***********************************************/
 
-//#define DEBUG
+#define DEBUG
 
 #include "rs232.h"
 #include "main.h"
@@ -229,30 +229,30 @@ int FakeData(){
 	for(i = 0; i < size; i++){
 		buf[index++] = 'M';
 		buf[index++] = 'B';
+		buf[index++] = 0;
 		buf[index++] = 255;
+		buf[index++] = 0;
 		buf[index++] = 255;
+		buf[index++] = 0;
 		buf[index++] = 255;
+		buf[index++] = 0;
 		buf[index++] = 255;
+		buf[index++] = 0;
 		buf[index++] = 255;
-		buf[index++] = 255;
-		buf[index++] = 255;
-		buf[index++] = 255;
-		buf[index++] = 255;
-		buf[index++] = 255;
-		buf[index++] = 255;
+		buf[index++] = 0;
 		buf[index++] = 255;
 		buf[index++] = 'U';
+		buf[index++] = 0;
 		buf[index++] = 255;
+		buf[index++] = 0;
 		buf[index++] = 255;
+		buf[index++] = 0;
 		buf[index++] = 255;
+		buf[index++] = 0;
 		buf[index++] = 255;
+		buf[index++] = 0;
 		buf[index++] = 255;
-		buf[index++] = 255;
-		buf[index++] = 255;
-		buf[index++] = 255;
-		buf[index++] = 255;
-		buf[index++] = 255;
-		buf[index++] = 255;
+		buf[index++] = 0;
 		buf[index++] = 255;
 	};
 	return size * 27;
