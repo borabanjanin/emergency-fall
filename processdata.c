@@ -51,7 +51,7 @@ int GraphData(short sensor_id, SensorInfo* point_data, Sample* point){
 
 	if(CHEST == sensor_id){
 #ifdef  PLOTCHESTACCEl
-		accel_chest[chest_sample] = (point->accel)/16000;
+		accel_chest[chest_sample] = (point->accel)/8000;
 		gnuplot_resetplot(plot_handle_chest);
 		gnuplot_set_xlabel(plot_handle_chest, "Chest Accel g/s");
 		gnuplot_cmd(plot_handle_chest, "set yrange [0:2]");
@@ -94,7 +94,7 @@ int GraphData(short sensor_id, SensorInfo* point_data, Sample* point){
 
 	if(THIGH == sensor_id){
 #ifdef PLOTTHIGHACCEl
-		accel_thigh[thigh_sample] = (point->accel)/16000;
+		accel_thigh[thigh_sample] = (point->accel)/8000;
 		gnuplot_resetplot(plot_handle_thigh);
 		gnuplot_set_xlabel(plot_handle_thigh, "Thigh Accel g/s");
 		gnuplot_cmd(plot_handle_thigh, "set yrange [0:2]");
@@ -240,8 +240,8 @@ int MovingAverage(SensorInfo* sensor, Sample* point){
 		sensor->moving_index = ++(sensor->moving_index)%3;
 	}
 	//printf("Data Fill: %d\n",sensor->data_fill);
-	//printf("moving angular: %f\n",sensor->moving_ang);
-	//printf("moving accel: %f\n",sensor->moving_accel);
+	printf("moving angular: %f\n",sensor->moving_ang);
+	printf("moving accel: %f\n",sensor->moving_accel);
 	//printf("sample number: %d",sensorb->sample_number);
 	return 0;
 }
