@@ -196,7 +196,11 @@ int ProcessInput(){
 			i++;
 			inputbyte =  buf[i];
 			if('B' == inputbyte){
-				chest_info.cali_active = 1;
+				if(chest_info.cali_active == 0){
+					chest_info.cali_active = 1;
+				}else{
+					chest_info.cali_active = 0;
+				}
 				printf("B packet \n");
 			}else{
 				chest_info.cali_active = 0;
