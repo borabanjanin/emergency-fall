@@ -151,8 +151,10 @@ int CalibrationRoutine(Sample* point){
 		cali_chest.zrot = point->zrot;
 		cali_chest.accel = point->accel;
 		cali_chest.one_g = point->accel;
+		cali_chest.ang_accel = point->ang_accel;
 	}else{
 		cali_chest.one_g = (point->accel-cali_chest.one_g)*0.2+(point->accel);
+		cali_chest.ang_accel = (point->ang_accel-cali_chest.ang_accel)*0.2+(point->ang_accel);
 	}
 	return 0;
 }
@@ -264,9 +266,9 @@ int FallDetection(short sensor_id, SensorInfo* sensor, Sample* point){
 		}else if(sensor_id == THIGH){
 			if(sensor->sample_number == (++last_sample_thigh%1000)){
 				if((sensor->moving_accel)>(cali_chest.one_g*1.4)){
-	//				fall_detected = TRUE;
+					fall_detected = TRUE;
 				}
-				if((sensor->moving_ang)>60){
+				if((sensor->moving_ang)>cali_chest.ang_accel*1.4){
 					fall_detected = TRUE;
 				}
 			}
