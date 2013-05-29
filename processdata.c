@@ -255,29 +255,34 @@ int FallDetection(short sensor_id, SensorInfo* sensor, Sample* point){
 	if(sensor->data_fill){
 		if(sensor_id == CHEST){
 			if(sensor->sample_number == (++last_sample_chest%1000)){
-				if((sensor->moving_accel)>(cali_chest.one_g*1.4)){
-					fall_detected = TRUE;
+				if((sensor->moving_accel)>(cali_chest.one_g*1.5)){
+					fall_detected = 2;
 				}
-				if((sensor->moving_ang)>60){
-					fall_detected = TRUE;
+				if((sensor->moving_ang)>cali_chest.ang_accel*2 && (sensor->moving_ang) > 130 && point->ang_accel > (sensor->moving_ang) * 1.2){
+					fall_detected = 1;
 				}
 			}
 			last_sample_chest = sensor->sample_number;
 		}else if(sensor_id == THIGH){
 			if(sensor->sample_number == (++last_sample_thigh%1000)){
-				if((sensor->moving_accel)>(cali_chest.one_g*1.4)){
-					fall_detected = TRUE;
+				if((sensor->moving_accel)>(cali_chest.one_g*1.5)){
+					fall_detected = 2;
 				}
-				if((sensor->moving_ang)>cali_chest.ang_accel*1.4){
-					fall_detected = TRUE;
+				if((sensor->moving_ang)>cali_chest.ang_accel*2 && sensor->moving_ang > 130 && point->ang_accel > (sensor->moving_ang) * 1.2){
+					fall_detected = 1;
 				}
 			}
 
 			last_sample_thigh =sensor->sample_number;
 		}
 	}
-	if(fall_detected == TRUE){
-		printf("FALL DETECTED\n");
+	printf("Moving Aceel: %f versus Cali Moving Accel: %f \n", sensor->moving_accel, cali_chest.one_g);
+	printf("Moving Ang: %f verus Cali moving Moving Ang %f \n", sensor->moving_ang, cali_chest.ang_accel);
+	if(fall_detected == 2){
+		printf("FALL DETECTED ACCELERATION\n");
+	}
+	if(fall_detected == 1){
+		printf("FALL DETECTED GYROSCOPE\n");
 	}
 	return 0;
 }

@@ -201,7 +201,6 @@ int ProcessInput(){
 				}else{
 					chest_info.cali_active = 0;
 				}
-				printf("B packet \n");
 			}else{
 				chest_info.cali_active = 0;
 			}
