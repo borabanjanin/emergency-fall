@@ -240,8 +240,8 @@ int MovingAverage(SensorInfo* sensor, Sample* point){
 		sensor->moving_index = ++(sensor->moving_index)%3;
 	}
 	//printf("Data Fill: %d\n",sensor->data_fill);
-	printf("moving angular: %f\n",sensor->moving_ang);
-	printf("moving accel: %f\n",sensor->moving_accel);
+	//printf("moving angular: %f\n",sensor->moving_ang);
+	//printf("moving accel: %f\n",sensor->moving_accel);
 	//printf("sample number: %d",sensorb->sample_number);
 	return 0;
 }
@@ -264,7 +264,7 @@ int FallDetection(short sensor_id, SensorInfo* sensor, Sample* point){
 		}else if(sensor_id == THIGH){
 			if(sensor->sample_number == (++last_sample_thigh%1000)){
 				if((sensor->moving_accel)>(cali_chest.one_g*1.4)){
-					fall_detected = TRUE;
+	//				fall_detected = TRUE;
 				}
 				if((sensor->moving_ang)>60){
 					fall_detected = TRUE;

@@ -10,7 +10,7 @@
  ***********************************************
  ***********************************************/
 
-#define DEBUG
+//#define DEBUG
 
 #include "rs232.h"
 #include "main.h"
@@ -96,14 +96,14 @@ int StoreInput(Sample* point, signed int measurement, short type_input){
 				point->zrot = measurement;
 				break;
 			case 13:
-				/*
-					printf("%i ",point->xaccel);
+				
+			/*		printf("%i ",point->xaccel);
 					printf("%i ",point->yaccel);
 					printf("%i ",point->zaccel);
 					printf("%i ",point->xrot);
 					printf("%i ",point->yrot);
 					printf("%i \n",point->zrot);
-				*/
+			*/	
 				break;
 		}
 
@@ -163,7 +163,7 @@ int ParseInput(short passed, SensorInfo* point_data, int input_index){
 			AccelAngle(point_data, data_point);
 			ComplementaryFilter(point_data, data_point);
 			MovingAverage(point_data, data_point);
-			if(point_data->cali_active && passed == CHEST || passed == CHEST && point_data->data_fill == FALSE){
+			if((point_data->cali_active && passed == CHEST) || (point_data->data_fill == FALSE && cali_chest.fill != TRUE)){
 				CalibrationRoutine(data_point);
 			}
 			FallDetection(passed, point_data, data_point);
@@ -197,6 +197,7 @@ int ProcessInput(){
 			inputbyte =  buf[i];
 			if('B' == inputbyte){
 				chest_info.cali_active = 1;
+				printf("B packet \n");
 			}else{
 				chest_info.cali_active = 0;
 			}
