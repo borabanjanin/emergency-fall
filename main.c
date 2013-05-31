@@ -48,10 +48,10 @@ FILE* OpenFile(){
 int ConnectSerialPort(){
 
 	if(RS232_OpenComport(CPORTNUMBER, BDRATE)){
-		printf("Can not open comport\n");
+		//printf("Can not open comport\n");
 		return 1;
 	}
-	printf("Connected serial port successfully\n");
+	//printf("Connected serial port successfully\n");
 	return 0;
 }
 #else
@@ -196,7 +196,6 @@ int ProcessInput(){
 			i++;
 			inputbyte =  buf[i];
 			if('B' == inputbyte){
-				printf("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB\n");
 				if(chest_info.cali_active == 0){
 					chest_info.cali_active = 1;
 				}else{
@@ -286,7 +285,7 @@ int main(){
 	Initialize();
 
 	OpenFile();
-	printf("Opened log file\n");
+	//printf("Opened log file\n");
 	struct sigaction SIGINTHANDLER;
 	SIGINTHANDLER.sa_handler = my_handler;
 	sigemptyset(&SIGINTHANDLER.sa_mask);
