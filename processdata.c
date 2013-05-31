@@ -187,19 +187,19 @@ int ComplementaryFilter(SensorInfo* sensor, Sample* point) {
 
 	double x_ang_vel = (double)sensor->data_array[sensor->sample_number].xrot;
 	x_ang_vel = 250 * x_ang_vel/32767.5;
-	sensor->xangle_comp = time_constant * (sensor->xangle_comp * x_ang_vel * sensor->dt) + (1 - time_constant) * sensor->xangle_accel;
+	sensor->xangle_comp = time_constant * (sensor->xangle_comp+x_ang_vel * sensor->dt) + (1 - time_constant) * sensor->xangle_accel;
 
 	double y_ang_vel = (double)sensor->data_array[sensor->sample_number].yrot;
 	y_ang_vel = 250 * y_ang_vel/32767.5;
-	sensor->yangle_comp = time_constant * (sensor->yangle_comp * y_ang_vel * sensor->dt) + (1 - time_constant) * sensor->yangle_accel;
+	sensor->yangle_comp = time_constant * (sensor->yangle_comp+y_ang_vel * sensor->dt) + (1 - time_constant) * sensor->yangle_accel;
 
 	double z_ang_vel = (double)sensor->data_array[sensor->sample_number].zrot;
 	z_ang_vel = 250 * z_ang_vel/32767.5;
-	sensor->zangle_comp = time_constant * (sensor->zangle_comp * z_ang_vel * sensor->dt) + (1 - time_constant) * sensor->zangle_accel;
+	sensor->zangle_comp = time_constant * (sensor->zangle_comp+z_ang_vel * sensor->dt) + (1 - time_constant) * sensor->zangle_accel;
 
-//	printf("accel_vel: %f %f %f \n ", sensor->xangle_accel, sensor->yangle_accel, sensor->zangle_accel);
-//	printf("ang_vel: %f %f %f \n", x_ang_vel, y_ang_vel, z_ang_vel);
-	printf("Post comp angle: %f %f %f \n\n",sensor->xangle_comp,sensor->yangle_comp,sensor->zangle_comp);
+//	printf("accel_vel: %f %f %f \n ", sensor->xangle_accel, sensor->yangle_accel, sensor->zangle_accel);	
+	printf("ang_vel: %f %f %f \n", x_ang_vel, y_ang_vel, z_ang_vel);
+//	printf("Post comp angle: %f %f %f \n\n",sensor->xangle_comp,sensor->yangle_comp,sensor->zangle_comp);
 
 	return 0;
 }
