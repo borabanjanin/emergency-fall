@@ -196,6 +196,7 @@ int ProcessInput(){
 			i++;
 			inputbyte =  buf[i];
 			if('B' == inputbyte){
+				printf("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB\n");
 				if(chest_info.cali_active == 0){
 					chest_info.cali_active = 1;
 				}else{
@@ -204,6 +205,7 @@ int ProcessInput(){
 			}else{
 				chest_info.cali_active = 0;
 			}
+
 			i++;
 			i = ParseInput(CHEST, &chest_info, i);
 			if(chest_info.sample_number < 999){
