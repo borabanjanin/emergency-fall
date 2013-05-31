@@ -276,6 +276,8 @@ int FallDetection(short sensor_id, SensorInfo* sensor, Sample* point){
 			last_sample_thigh =sensor->sample_number;
 		}
 	}
+	return 0;
+}
 	//printf("Moving Aceel: %f versus Cali Moving Accel: %f \n", sensor->moving_accel, cali_chest.one_g);
 	//printf("Moving Ang: %f verus Cali moving Moving Ang %f \n", sensor->moving_ang, cali_chest.ang_accel);
 #ifdef VISUALIZATION
