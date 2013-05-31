@@ -13,7 +13,7 @@
 //#define PLOTTHIGHANGLE
 //#define PLOTTHIGHACCEl
 //#define PLOTCHESTACCEl
-#define VISUALIZATION
+//#define VISUALIZATION
 
 
 double accel_chest[25];
@@ -181,7 +181,7 @@ int AccelAngle(SensorInfo* sensor, Sample* point){
 }
 
 int ComplementaryFilter(SensorInfo* sensor, Sample* point) {
-	double time_constant = 0.50;
+	double time_constant = 0.97;
 
 //	printf("Pre comp angle: %f %f %f \n\n",sensor->xangle_comp,sensor->yangle_comp,sensor->zangle_comp);
 
@@ -199,7 +199,7 @@ int ComplementaryFilter(SensorInfo* sensor, Sample* point) {
 
 //	printf("accel_vel: %f %f %f \n ", sensor->xangle_accel, sensor->yangle_accel, sensor->zangle_accel);
 //	printf("ang_vel: %f %f %f \n", x_ang_vel, y_ang_vel, z_ang_vel);
-//	printf("Post comp angle: %f %f %f \n\n",sensor->xangle_comp,sensor->yangle_comp,sensor->zangle_comp);
+	printf("Post comp angle: %f %f %f \n\n",sensor->xangle_comp,sensor->yangle_comp,sensor->zangle_comp);
 
 	return 0;
 }
@@ -283,7 +283,7 @@ int FallDetection(short sensor_id, SensorInfo* sensor, Sample* point){
 		printf("c %f \%f %f \n", sensor->xangle_accel,sensor->yangle_accel,sensor->zangle_accel);
 
 	}else if(sensor_id == THIGH){
-		printf("c %f \%f %f \n", sensor->xangle_accel,sensor->yangle_accel,sensor->zangle_accel);
+		printf("t %f \%f %f \n", sensor->xangle_accel,sensor->yangle_accel,sensor->zangle_accel);
 	}
 	if(fall_detected == 2){
 		//printf("FALL DETECTED ACCELERATION\n");
@@ -293,7 +293,7 @@ int FallDetection(short sensor_id, SensorInfo* sensor, Sample* point){
 	}
 	return 0;
 }
-#endif VISUALIZATION
+#endif
 
 
 
