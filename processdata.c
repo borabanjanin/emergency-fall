@@ -181,7 +181,7 @@ int AccelAngle(SensorInfo* sensor, Sample* point){
 }
 
 int ComplementaryFilter(SensorInfo* sensor, Sample* point) {
-	double time_constant = 0.97;
+	double time_constant = 0.80;
 
 //	printf("Pre comp angle: %f %f %f \n\n",sensor->xangle_comp,sensor->yangle_comp,sensor->zangle_comp);
 
@@ -198,8 +198,8 @@ int ComplementaryFilter(SensorInfo* sensor, Sample* point) {
 	sensor->zangle_comp = time_constant * (sensor->zangle_comp+z_ang_vel * sensor->dt) + (1 - time_constant) * sensor->zangle_accel;
 
 //	printf("accel_vel: %f %f %f \n ", sensor->xangle_accel, sensor->yangle_accel, sensor->zangle_accel);	
-	printf("ang_vel: %f %f %f \n", x_ang_vel, y_ang_vel, z_ang_vel);
-//	printf("Post comp angle: %f %f %f \n\n",sensor->xangle_comp,sensor->yangle_comp,sensor->zangle_comp);
+//	printf("ang_vel: %f %f %f \n", x_ang_vel, y_ang_vel, z_ang_vel);
+	printf("Post comp angle: %f %f %f \n\n",sensor->xangle_comp,sensor->yangle_comp,sensor->zangle_comp);
 
 	return 0;
 }
