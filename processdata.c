@@ -280,8 +280,14 @@ int FallDetection(short sensor_id, SensorInfo* sensor, Sample* point){
 			last_sample_thigh =sensor->sample_number;
 		}
 	}
-	printf("moving ang: %f",sensor->moving_ang);
-	printf("comp ang: %f \n",sensor->comp_ang);
+//	printf("moving ang: %f",sensor->moving_ang);
+//	printf("comp ang: %f \n",sensor->comp_ang);
+	if(fall_detected == 2){
+		printf("FALL DETECTED ACCELERATION\n");
+	}
+	if(fall_detected == 1){
+		printf("FALL DETECTED GYROSCOPE\n");
+	}
 	return 0;
 }
 	//printf("Moving Aceel: %f versus Cali Moving Accel: %f \n", sensor->moving_accel, cali_chest.one_g);
