@@ -199,7 +199,11 @@ int ComplementaryFilter(SensorInfo* sensor, Sample* point) {
 
 //	printf("accel_vel: %f %f %f \n ", sensor->xangle_accel, sensor->yangle_accel, sensor->zangle_accel);	
 //	printf("ang_vel: %f %f %f \n", x_ang_vel, y_ang_vel, z_ang_vel);
-	printf("Post comp angle: %f %f %f \n\n",sensor->xangle_comp,sensor->yangle_comp,sensor->zangle_comp);
+	double xcomp_sq = pow(sensor->xangle_comp,2.0);
+	double ycomp_sq = pow(sensor->yangle_comp,2.0);
+	double zcomp_sq = pow(sensor->zangle_comp,2.0);
+	sensor->comp_ang = sqrt(xcomp_sq + ycomp_sq + zcomp_sq);
+	//printf("Post comp angle: %f %f %f \n\n",sensor->xangle_comp,sensor->yangle_comp,sensor->zangle_comp);
 
 	return 0;
 }
@@ -276,6 +280,8 @@ int FallDetection(short sensor_id, SensorInfo* sensor, Sample* point){
 			last_sample_thigh =sensor->sample_number;
 		}
 	}
+	printf("moving ang: %f",sensor->moving_ang);
+	printf("comp ang: %f \n",sensor->comp_ang);
 	return 0;
 }
 	//printf("Moving Aceel: %f versus Cali Moving Accel: %f \n", sensor->moving_accel, cali_chest.one_g);

@@ -32,6 +32,7 @@ typedef struct SensorInfo{
 	double xangle_comp;
 	double yangle_comp;
 	double zangle_comp;
+	double comp_ang;
 	double moving_accel;
 	double moving_accel_array[3];
 	double moving_ang;
