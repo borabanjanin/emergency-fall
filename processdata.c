@@ -177,17 +177,36 @@ int CalibrationRoutine(short sensor_id, Sample* point){
 	return 0;
 }
 
-int SittingCalibration(short sensor_id, SensorInfo* sensor, Sample* point){
+int SittingCalibration(short sensor_id, SensorInfo* sensor){
 	if(sensor_id == CHEST){
+		printf("sitting calibration chest \n");
 		cali_chest.x_sitting_angle = sensor->xangle_comp;
 		cali_chest.y_sitting_angle = sensor->yangle_comp;
 		cali_chest.z_sitting_angle = sensor->zangle_comp;
 		cali_chest.sitting_fill = TRUE;
 	}else if(sensor_id == THIGH){
+		printf("sitting calibration thigh \n");
 		cali_thigh.x_sitting_angle = sensor->xangle_comp;
 		cali_thigh.y_sitting_angle = sensor->yangle_comp;
 		cali_thigh.z_sitting_angle = sensor->zangle_comp;
 		cali_thigh.sitting_fill = TRUE;
+	}
+	return 0;
+}
+
+int StandingCalibration(short sensor_id, SensorInfo* sensor){
+	if(sensor_id == CHEST){
+		printf("standing calibration chest \n");
+		cali_chest.x_standing_angle = sensor->xangle_comp;
+		cali_chest.y_standing_angle = sensor->yangle_comp;
+		cali_chest.z_standing_angle = sensor->zangle_comp;
+		cali_chest.sitting_fill = TRUE;
+	}else if(sensor_id == THIGH){
+		printf("standing calibration thigh \n");
+		cali_thigh.x_standing_angle = sensor->xangle_comp;
+		cali_thigh.y_standing_angle = sensor->yangle_comp;
+		cali_thigh.z_standing_angle = sensor->zangle_comp;
+		cali_thigh.standing_fill = TRUE;
 	}
 	return 0;
 }

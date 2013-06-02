@@ -53,6 +53,10 @@ typedef struct CalibrateInfo{
 	double y_sitting_angle;
 	double z_sitting_angle;
 	short sitting_fill;
+	double x_standing_angle;
+	double y_standing_angle;
+	double z_standing_angle;
+	short standing_fill;
 	double accel;
 	double one_g;
 	double ang_accel;
