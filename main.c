@@ -264,8 +264,10 @@ int FakeData(){
 }
 
 int Initialize(){
-	chest_info.dt = 0.086338;
-	thigh_info.dt = 0.086338;
+	//chest_info.dt = 0.086338;
+	//thigh_info.dt = 0.086338;
+	chest_info.dt = 0.15;
+	thigh_info.dt = 0.15;
 	cali_chest.fill = 0;
 	int buffersize = 0;
 	plot_handle_thigh = gnuplot_init();
