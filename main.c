@@ -163,8 +163,8 @@ int ParseInput(short passed, SensorInfo* point_data, int input_index){
 			AccelAngle(point_data, data_point);
 			ComplementaryFilter(point_data, data_point);
 			MovingAverage(point_data, data_point);
-			if((point_data->cali_active && passed == CHEST) || (point_data->data_fill == FALSE && cali_chest.fill != TRUE)){
-				CalibrationRoutine(data_point);
+			if(point_data->cali_active){
+				CalibrationRoutine(passed, data_point);
 			}
 			FallDetection(passed, point_data, data_point);
 			GraphData(passed, point_data, data_point);
@@ -198,11 +198,14 @@ int ProcessInput(){
 			if('B' == inputbyte){
 				if(chest_info.cali_active == 0){
 					chest_info.cali_active = 1;
+					thigh_info.cali_active = 1;
 				}else{
 					chest_info.cali_active = 0;
+					thigh_info.cali_active = 0;
 				}
 			}else{
 				chest_info.cali_active = 0;
+				thigh_info.cali_active = 0;
 			}
 
 			i++;
@@ -268,7 +271,10 @@ int Initialize(){
 	//thigh_info.dt = 0.086338;
 	chest_info.dt = 0.20;
 	thigh_info.dt = 0.20;
-	cali_chest.fill = 0;
+	cali_chest.fill = FALSE;
+	cali_chest.sitting_fill = FALSE;
+	cali_thigh.fill = FALSE;
+	cali_thigh.sitting_fill = FALSE;
 	int buffersize = 0;
 	plot_handle_thigh = gnuplot_init();
 	plot_handle_chest = gnuplot_init();

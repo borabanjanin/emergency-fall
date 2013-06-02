@@ -140,21 +140,54 @@ int GraphData(short sensor_id, SensorInfo* point_data, Sample* point){
 	return 0;
 }
 
-int CalibrationRoutine(Sample* point){
-	if(FALSE == cali_chest.fill){
-		cali_chest.fill = TRUE;
-		cali_chest.xaccel = point->xaccel;
-		cali_chest.yaccel = point->yaccel;
-		cali_chest.zaccel = point->zaccel;
-		cali_chest.xrot = point->xrot;
-		cali_chest.yrot = point->yrot;
-		cali_chest.zrot = point->zrot;
-		cali_chest.accel = point->accel;
-		cali_chest.one_g = point->accel;
-		cali_chest.ang_accel = point->ang_accel;
-	}else{
-		cali_chest.one_g = (point->accel-cali_chest.one_g)*0.2+(point->accel);
-		cali_chest.ang_accel = (point->ang_accel-cali_chest.ang_accel)*0.2+(point->ang_accel);
+int CalibrationRoutine(short sensor_id, Sample* point){
+	if(sensor_id == CHEST){
+		if(FALSE == cali_chest.fill){
+			cali_chest.fill = TRUE;
+			cali_chest.xaccel = point->xaccel;
+			cali_chest.yaccel = point->yaccel;
+			cali_chest.zaccel = point->zaccel;
+			cali_chest.xrot = point->xrot;
+			cali_chest.yrot = point->yrot;
+			cali_chest.zrot = point->zrot;
+			cali_chest.accel = point->accel;
+			cali_chest.one_g = point->accel;
+			cali_chest.ang_accel = point->ang_accel;
+		}else{
+			cali_chest.one_g = (point->accel-cali_chest.one_g)*0.2+(point->accel);
+			cali_chest.ang_accel = (point->ang_accel-cali_chest.ang_accel)*0.2+(point->ang_accel);
+		}
+	}else if(sensor_id == THIGH){
+		if(FALSE == cali_thigh.fill){
+			cali_thigh.fill = TRUE;
+			cali_thigh.xaccel = point->xaccel;
+			cali_thigh.yaccel = point->yaccel;
+			cali_thigh.zaccel = point->zaccel;
+			cali_thigh.xrot = point->xrot;
+			cali_thigh.yrot = point->yrot;
+			cali_thigh.zrot = point->zrot;
+			cali_thigh.accel = point->accel;
+			cali_thigh.one_g = point->accel;
+			cali_thigh.ang_accel = point->ang_accel;
+		}else{
+			cali_thigh.one_g = (point->accel-cali_thigh.one_g)*0.2+(point->accel);
+			cali_thigh.ang_accel = (point->ang_accel-cali_thigh.ang_accel)*0.2+(point->ang_accel);
+		}
+	}
+	return 0;
+}
+
+int SittingCalibration(short sensor_id, SensorInfo* sensor, Sample* point){
+	if(sensor_id == CHEST){
+		cali_chest.x_sitting_angle = sensor->xangle_comp;
+		cali_chest.y_sitting_angle = sensor->yangle_comp;
+		cali_chest.z_sitting_angle = sensor->zangle_comp;
+		cali_chest.sitting_fill = TRUE;
+	}else if(sensor_id == THIGH){
+		cali_thigh.x_sitting_angle = sensor->xangle_comp;
+		cali_thigh.y_sitting_angle = sensor->yangle_comp;
+		cali_thigh.z_sitting_angle = sensor->zangle_comp;
+		cali_thigh.sitting_fill = TRUE;
 	}
 	return 0;
 }
@@ -199,10 +232,6 @@ int ComplementaryFilter(SensorInfo* sensor, Sample* point) {
 
 //	printf("accel_vel: %f %f %f \n ", sensor->xangle_accel, sensor->yangle_accel, sensor->zangle_accel);	
 //	printf("ang_vel: %f %f %f \n", x_ang_vel, y_ang_vel, z_ang_vel);
-	double xcomp_sq = pow(sensor->xangle_comp,2.0);
-	double ycomp_sq = pow(sensor->yangle_comp,2.0);
-	double zcomp_sq = pow(sensor->zangle_comp,2.0);
-	sensor->comp_ang = sqrt(xcomp_sq + ycomp_sq + zcomp_sq);
 	//printf("Post comp angle: %f %f %f \n\n",sensor->xangle_comp,sensor->yangle_comp,sensor->zangle_comp);
 
 	return 0;
@@ -256,8 +285,8 @@ short fall_detected = FALSE;
 int FallDetection(short sensor_id, SensorInfo* sensor, Sample* point){	
 	static int last_sample_chest;
 	static int last_sample_thigh;
-	if(sensor->data_fill){
-		if(sensor_id == CHEST){
+
+		if(sensor_id == CHEST && cali_chest.fill == TRUE){
 			if(sensor->sample_number == (++last_sample_chest%1000)){
 				if((sensor->moving_accel)>(cali_chest.one_g*1.5)){
 					fall_detected = 2;
@@ -267,19 +296,21 @@ int FallDetection(short sensor_id, SensorInfo* sensor, Sample* point){
 				}
 			}
 			last_sample_chest = sensor->sample_number;
-		}else if(sensor_id == THIGH){
+		}
+
+		if(sensor_id == THIGH && cali_thigh.fill == TRUE){
 			if(sensor->sample_number == (++last_sample_thigh%1000)){
-				if((sensor->moving_accel)>(cali_chest.one_g*1.5)){
+				if((sensor->moving_accel)>(cali_thigh.one_g*1.5)){
 					fall_detected = 2;
 				}
-				if((sensor->moving_ang)>cali_chest.ang_accel*2 && sensor->moving_ang > 130 && point->ang_accel > (sensor->moving_ang) * 1.2){
+				if((sensor->moving_ang)>cali_thigh.ang_accel*2 && sensor->moving_ang > 130 && point->ang_accel > (sensor->moving_ang) * 1.2){
 					fall_detected = 1;
 				}
 			}
 
 			last_sample_thigh =sensor->sample_number;
 		}
-	}
+
 //	printf("moving ang: %f",sensor->moving_ang);
 //	printf("comp ang: %f \n",sensor->comp_ang);
 	if(fall_detected == 2){

@@ -32,7 +32,6 @@ typedef struct SensorInfo{
 	double xangle_comp;
 	double yangle_comp;
 	double zangle_comp;
-	double comp_ang;
 	double moving_accel;
 	double moving_accel_array[3];
 	double moving_ang;
@@ -50,6 +49,10 @@ typedef struct CalibrateInfo{
 	int xrot;
 	int yrot;
 	int zrot;
+	double x_sitting_angle;
+	double y_sitting_angle;
+	double z_sitting_angle;
+	short sitting_fill;
 	double accel;
 	double one_g;
 	double ang_accel;
@@ -68,6 +71,7 @@ gnuplot_ctrl * plot_handle_thigh;
 gnuplot_ctrl * plot_handle_chest_angle;
 gnuplot_ctrl * plot_handle_thigh_angle;
 CalibrateInfo cali_chest;
+CalibrateInfo cali_thigh;
 unsigned char buf[4096];
 int buffersize;
 
