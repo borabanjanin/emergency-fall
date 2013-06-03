@@ -213,9 +213,6 @@ int ProcessInput(){
 					SittingCalibration(CHEST, &chest_info);
 					SittingCalibration(THIGH, &thigh_info);
 				}
-			}else{
-				chest_info.cali_active = 0;
-				thigh_info.cali_active = 0;
 			}
 
 			i++;
