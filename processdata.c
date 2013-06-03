@@ -154,8 +154,12 @@ int CalibrationRoutine(short sensor_id, Sample* point){
 			cali_chest.one_g = point->accel;
 			cali_chest.ang_accel = point->ang_accel;
 		}else{
-			cali_chest.one_g = (point->accel-cali_chest.one_g)*0.2+(point->accel);
-			cali_chest.ang_accel = (point->ang_accel-cali_chest.ang_accel)*0.2+(point->ang_accel);
+			if(point->accel > cali_chest.one_g){
+				cali_chest.one_g = point->accel;
+			}
+			if(point->ang_accel > cali_chest.ang_accel){
+				cali_chest.ang_accel = point->ang_accel;
+			}
 		}
 	}else if(sensor_id == THIGH){
 		if(FALSE == cali_thigh.fill){
@@ -170,8 +174,12 @@ int CalibrationRoutine(short sensor_id, Sample* point){
 			cali_thigh.one_g = point->accel;
 			cali_thigh.ang_accel = point->ang_accel;
 		}else{
-			cali_thigh.one_g = (point->accel-cali_thigh.one_g)*0.2+(point->accel);
-			cali_thigh.ang_accel = (point->ang_accel-cali_thigh.ang_accel)*0.2+(point->ang_accel);
+			if(point->accel > cali_chest.one_g){
+				cali_thigh.one_g = point->accel;
+			}
+			if(point->ang_accel > cali_chest.ang_accel){
+				cali_thigh.ang_accel = point->ang_accel;
+			}
 		}
 	}
 	return 0;
@@ -316,7 +324,7 @@ int FallDetection(short sensor_id, SensorInfo* sensor, Sample* point){
 #endif
 		if(sensor_id == CHEST && cali_chest.fill == TRUE && sensor->cali_active == FALSE){
 			if(sensor->sample_number == (++last_sample_chest%1000)){
-				if(point->accel > 1.5*sensor->moving_accel || point->accel < 1.5*sensor->moving_accel){
+				if(sensor->moving_accel > cali_chest.one_g * 1.3){
 					printf("%f %f",sensor->moving_accel,cali_chest.one_g*1.5);
 					fall_detected = 4;
 				}
@@ -329,7 +337,7 @@ int FallDetection(short sensor_id, SensorInfo* sensor, Sample* point){
 
 		if(sensor_id == THIGH && cali_thigh.fill == TRUE && sensor->cali_active == FALSE){
 			if(sensor->sample_number == (++last_sample_thigh%1000)){
-				if(point->accel > 1.5*sensor->moving_accel || point->accel < 1.5*sensor->moving_accel){
+				if(sensor->moving_accel > cali_thigh.one_g * 1.3){
 					printf("%f %f",sensor->moving_accel,cali_thigh.one_g*1.5);
 					fall_detected = 2;
 				}
