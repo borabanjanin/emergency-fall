@@ -229,7 +229,7 @@ int AccelAngle(SensorInfo* sensor, Sample* point){
 }
 
 int ComplementaryFilter(SensorInfo* sensor, Sample* point) {
-	double time_constant = 0.80;
+	double time_constant = 0.50;
 
 //	printf("Pre comp angle: %f %f %f \n\n",sensor->xangle_comp,sensor->yangle_comp,sensor->zangle_comp);
 
@@ -301,6 +301,19 @@ int FallDetection(short sensor_id, SensorInfo* sensor, Sample* point){
 	static int last_sample_chest;
 	static int last_sample_thigh;
 
+#ifdef LOG
+	if(sensor_id == CHEST){
+		sprintf(logfile, "c ");
+	}else{
+		sprintf(logfile, "t ");
+	}
+	sprintf(logfile, "%i ",point->xaccel);
+	sprintf(logfile,"%i ",point->yaccel);
+	sprintf(logfile,"%i ",point->zaccel);
+	sprintf(logfile,"%i ",point->xrot);
+	sprintf(logfile,"%i ",point->yrot);
+	sprintf(logfile,"%i \n",point->zrot);
+#endif
 		if(sensor_id == CHEST && cali_chest.fill == TRUE){
 			if(sensor->sample_number == (++last_sample_chest%1000)){
 				if((sensor->moving_accel)>(cali_chest.one_g*1.5)){
@@ -329,12 +342,12 @@ int FallDetection(short sensor_id, SensorInfo* sensor, Sample* point){
 //	printf("moving ang: %f",sensor->moving_ang);
 //	printf("comp ang: %f \n",sensor->comp_ang);
 	if(cali_chest.standing_fill == TRUE && fall_detected > 0){
-		if(chest_info.xangle_comp  < cali_chest.x_standing_angle * 1.1 && chest_info.xangle_comp >  cali_chest.x_standing_angle * 0.9){
-			if(chest_info.yangle_comp  < cali_chest.y_standing_angle * 1.1 && chest_info.yangle_comp >  cali_chest.y_standing_angle * 0.9){
-				if(chest_info.zangle_comp  < cali_chest.z_standing_angle * 1.1 && chest_info.zangle_comp >  cali_chest.z_standing_angle * 0.9){
-					if(thigh_info.xangle_comp  < cali_chest.x_standing_angle * 1.1 && thigh_info.xangle_comp >  cali_chest.x_standing_angle * 0.9){
-						if(thigh_info.yangle_comp  < cali_chest.y_standing_angle * 1.1 && thigh_info.yangle_comp >  cali_chest.y_standing_angle * 0.9){
-							if(thigh_info.zangle_comp  < cali_chest.z_standing_angle * 1.1 && thigh_info.zangle_comp >  cali_chest.z_standing_angle * 0.9){
+		if(chest_info.xangle_comp  < cali_chest.x_standing_angle * 1.3 && chest_info.xangle_comp >  cali_chest.x_standing_angle * 0.7){
+			if(chest_info.yangle_comp  < cali_chest.y_standing_angle * 1.3 && chest_info.yangle_comp >  cali_chest.y_standing_angle * 0.7){
+				if(chest_info.zangle_comp  < cali_chest.z_standing_angle * 1.3 && chest_info.zangle_comp >  cali_chest.z_standing_angle * 0.7){
+					if(thigh_info.xangle_comp  < cali_chest.x_standing_angle * 1.3 && thigh_info.xangle_comp >  cali_chest.x_standing_angle * 0.7){
+						if(thigh_info.yangle_comp  < cali_chest.y_standing_angle * 1.3 && thigh_info.yangle_comp >  cali_chest.y_standing_angle * 0.7){
+							if(thigh_info.zangle_comp  < cali_chest.z_standing_angle * 1.3 && thigh_info.zangle_comp >  cali_chest.z_standing_angle * 0.7){
 								printf("FALL DETECTION AVERTED STANDING\n");
 								fall_detected = 0;
 							}
@@ -354,6 +367,7 @@ int FallDetection(short sensor_id, SensorInfo* sensor, Sample* point){
 	if(fall_detected == 1){
 		printf("FALL DETECTED GYROSCOPE\n");
 	}
+	fall_detected = 0;
 	return 0;
 }
 	//printf("Moving Aceel: %f versus Cali Moving Accel: %f \n", sensor->moving_accel, cali_chest.one_g);

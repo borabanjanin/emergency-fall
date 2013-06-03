@@ -104,12 +104,6 @@ int StoreInput(Sample* point, signed int measurement, short type_input){
 					printf("%i ",point->yrot);
 					printf("%i \n",point->zrot);
 			*/	
-				sprintf(logfile, "%i ",point->xaccel);
-				sprintf(logfile,"%i ",point->yaccel);
-				sprintf(logfile,"%i ",point->zaccel);
-				sprintf(logfile,"%i ",point->xrot);
-				sprintf(logfile,"%i ",point->yrot);
-				sprintf(logfile,"%i \n",point->zrot);
 
 				break;
 		}
