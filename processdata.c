@@ -179,13 +179,11 @@ int CalibrationRoutine(short sensor_id, Sample* point){
 
 int SittingCalibration(short sensor_id, SensorInfo* sensor){
 	if(sensor_id == CHEST){
-		printf("sitting calibration chest \n");
 		cali_chest.x_sitting_angle = sensor->xangle_comp;
 		cali_chest.y_sitting_angle = sensor->yangle_comp;
 		cali_chest.z_sitting_angle = sensor->zangle_comp;
 		cali_chest.sitting_fill = TRUE;
 	}else if(sensor_id == THIGH){
-		printf("sitting calibration thigh \n");
 		cali_thigh.x_sitting_angle = sensor->xangle_comp;
 		cali_thigh.y_sitting_angle = sensor->yangle_comp;
 		cali_thigh.z_sitting_angle = sensor->zangle_comp;
@@ -196,13 +194,11 @@ int SittingCalibration(short sensor_id, SensorInfo* sensor){
 
 int StandingCalibration(short sensor_id, SensorInfo* sensor){
 	if(sensor_id == CHEST){
-		printf("standing calibration chest \n");
 		cali_chest.x_standing_angle = sensor->xangle_comp;
 		cali_chest.y_standing_angle = sensor->yangle_comp;
 		cali_chest.z_standing_angle = sensor->zangle_comp;
 		cali_chest.sitting_fill = TRUE;
 	}else if(sensor_id == THIGH){
-		printf("standing calibration thigh \n");
 		cali_thigh.x_standing_angle = sensor->xangle_comp;
 		cali_thigh.y_standing_angle = sensor->yangle_comp;
 		cali_thigh.z_standing_angle = sensor->zangle_comp;
@@ -332,6 +328,17 @@ int FallDetection(short sensor_id, SensorInfo* sensor, Sample* point){
 
 //	printf("moving ang: %f",sensor->moving_ang);
 //	printf("comp ang: %f \n",sensor->comp_ang);
+	if(cali_chest.standing_fill == TRUE && fall_detected > 0){
+		if(sensor->xangle_comp  < cali_chest.x_standing_angle * 1.1 && sensor->xangle_comp >  cali_chest.x_standing_angle * 0.9){
+			if(sensor->yangle_comp  < cali_chest.y_standing_angle * 1.1 && sensor->yangle_comp >  cali_chest.y_standing_angle * 0.9){
+				if(sensor->zangle_comp  < cali_chest.z_standing_angle * 1.1 && sensor->zangle_comp >  cali_chest.z_standing_angle * 0.9){
+					printf("FALL DETECTION AVERTED STANDING\n")
+					fall_detected = 0;
+				}
+			}
+		}
+	}
+
 	if(fall_detected == 2){
 		printf("FALL DETECTED ACCELERATION\n");
 	}

@@ -184,6 +184,7 @@ int ProcessInput(){
 	int i;
 	for(i=0; i < buffersize; i++){
 		char inputbyte =  buf[i];
+		printf("%c + %d\n",buf[i],i);
 		if(inputbyte == 85){
 			thigh_info.type_input = 1;
 			i++;
@@ -241,7 +242,7 @@ void my_handler(int s){
 }
 
 int FakeData(){
-	int size = 5, index = 0, i;
+	int size = 5, index = 0, i, length;
 	for(i = 0; i < size; i++){
 		buf[index++] = 'M';
 		buf[index++] = 'B';
@@ -257,7 +258,8 @@ int FakeData(){
 		buf[index++] = 255;
 		buf[index++] = 0;
 		buf[index++] = 255;
-		buf[index++] = 'U';
+		buf[index++] = 'M';
+		buf[index++] = 'A';
 		buf[index++] = 0;
 		buf[index++] = 255;
 		buf[index++] = 0;
@@ -270,8 +272,11 @@ int FakeData(){
 		buf[index++] = 255;
 		buf[index++] = 0;
 		buf[index++] = 255;
+		if(i == 0){
+			length = index;
+		}
 	};
-	return size * 27;
+	return size * length;
 }
 
 int Initialize(){
