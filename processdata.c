@@ -332,7 +332,7 @@ int FallDetection(short sensor_id, SensorInfo* sensor, Sample* point){
 		if(sensor->xangle_comp  < cali_chest.x_standing_angle * 1.1 && sensor->xangle_comp >  cali_chest.x_standing_angle * 0.9){
 			if(sensor->yangle_comp  < cali_chest.y_standing_angle * 1.1 && sensor->yangle_comp >  cali_chest.y_standing_angle * 0.9){
 				if(sensor->zangle_comp  < cali_chest.z_standing_angle * 1.1 && sensor->zangle_comp >  cali_chest.z_standing_angle * 0.9){
-					printf("FALL DETECTION AVERTED STANDING\n")
+					printf("FALL DETECTION AVERTED STANDING\n");
 					fall_detected = 0;
 				}
 			}

@@ -165,6 +165,7 @@ int ParseInput(short passed, SensorInfo* point_data, int input_index){
 			MovingAverage(point_data, data_point);
 			if(point_data->cali_active){
 				CalibrationRoutine(passed, data_point);
+				printf("Calibration Active\n");
 			}else if(passed == CHEST && cali_chest.fill == FALSE){
 				CalibrationRoutine(passed, data_point);
 			}else if(passed == THIGH && cali_thigh.fill == FALSE){
@@ -184,7 +185,6 @@ int ProcessInput(){
 	int i;
 	for(i=0; i < buffersize; i++){
 		char inputbyte =  buf[i];
-		printf("%c + %d\n",buf[i],i);
 		if(inputbyte == 85){
 			thigh_info.type_input = 1;
 			i++;
@@ -282,6 +282,7 @@ int FakeData(){
 int Initialize(){
 	//chest_info.dt = 0.086338;
 	//thigh_info.dt = 0.086338;
+	//callNMA();
 	chest_info.dt = 0.20;
 	thigh_info.dt = 0.20;
 	cali_chest.fill = FALSE;
