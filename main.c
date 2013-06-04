@@ -205,6 +205,8 @@ int ProcessInput(){
 				if(chest_info.cali_active == 0){
 					chest_info.cali_active = 1;
 					thigh_info.cali_active = 1;
+					cali_chest.fill = FALSE;
+					cali_thigh.fill = FALSE;
 					StandingCalibration(CHEST, &chest_info);
 					StandingCalibration(THIGH, &thigh_info);
 				}else{

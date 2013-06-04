@@ -18,12 +18,8 @@
 
 double accel_chest[25];
 double accel_thigh[25];
-double x_angle_chest[25];
-double y_angle_chest[25];
-double z_angle_chest[25];
-double x_angle_thigh[25];
-double y_angle_thigh[25];
-double z_angle_thigh[25];
+double angle_chest[25];
+double angle_thigh[25];
 double accel_avg_thigh[3];
 double accel_avg_chest[3];
 
@@ -57,7 +53,7 @@ int GraphData(short sensor_id, SensorInfo* point_data, Sample* point){
 		gnuplot_cmd(plot_handle_chest, "set yrange [0:2]");
 		gnuplot_setstyle(plot_handle_chest, "lines");
 		 if(FALSE == chest_samples_fill){
-			gnuplot_plot_x(plot_handle_chest, accel_chest, chest_sample, "Chest Accel");
+			gnuplot_plot_x(plot_handle_chest, accel_chest, chest_sample, "Chest Acceleration");
 		}else{
 			gnuplot_plot_x(plot_handle_chest, accel_chest, 25, "test");
 		}
@@ -65,23 +61,17 @@ int GraphData(short sensor_id, SensorInfo* point_data, Sample* point){
 
 #ifdef PLOTCHESTANGLE
 		printf("chest angle plotting\n");
-		x_angle_chest[chest_sample] = point_data->xangle_comp;
-		y_angle_chest[chest_sample] = point_data->yangle_comp;
-		z_angle_chest[chest_sample] = point_data->zangle_comp;
+		angle_chest[chest_sample] = point_data->moving_ang;
 
 		gnuplot_resetplot(plot_handle_chest_angle);
-		gnuplot_set_xlabel(plot_handle_chest_angle, "Chest Angle");
+		gnuplot_set_xlabel(plot_handle_chest_angle, "Chest Angular Velocity");
 		gnuplot_cmd(plot_handle_chest_angle, "set yrange [-180:180]");
 		gnuplot_setstyle(plot_handle_chest_angle, "lines");
 
 		if(FALSE == chest_samples_fill){
-			gnuplot_plot_x(plot_handle_chest_angle, x_angle_chest, chest_sample, "x angle");
-			gnuplot_plot_x(plot_handle_chest_angle, y_angle_chest, chest_sample, "y angle");
-			gnuplot_plot_x(plot_handle_chest_angle, z_angle_chest, chest_sample, "z angle");
+			gnuplot_plot_x(plot_handle_chest_angle, angle_chest, chest_sample, "Degrees/Seconds");
 		}else{
-			gnuplot_plot_x(plot_handle_chest_angle, x_angle_chest, 25, "x angle");
-			gnuplot_plot_x(plot_handle_chest_angle, y_angle_chest, 25, "y angle");
-			gnuplot_plot_x(plot_handle_chest_angle, z_angle_chest, 25, "z angle");
+			gnuplot_plot_x(plot_handle_chest_angle, angle_chest, 25, "Angular Velocity");
 		}
 #endif
 		if(chest_sample < 24){
@@ -108,25 +98,19 @@ int GraphData(short sensor_id, SensorInfo* point_data, Sample* point){
 #endif
 
 #ifdef PLOTTHIGHANGLE
-		printf("thigh angle plotting\n");
-		x_angle_thigh[thigh_sample] = point_data->xangle_comp;
-		y_angle_thigh[thigh_sample] = point_data->yangle_comp;
-		z_angle_thigh[thigh_sample] = point_data->zangle_comp;
+			printf("thigh angle plotting\n");
+			angle_thigh[thigh_sample] = point_data->moving_ang;
 
-		gnuplot_resetplot(plot_handle_thigh_angle);
-		gnuplot_set_xlabel(plot_handle_thigh_angle, "Thigh Angle");
-		gnuplot_cmd(plot_handle_thigh_angle, "set yrange [-180:180]");
-		gnuplot_setstyle(plot_handle_thigh_angle, "lines");
+			gnuplot_resetplot(plot_handle_thigh_angle);
+			gnuplot_set_xlabel(plot_handle_thigh_angle, "Thigh Angular Velocity");
+			gnuplot_cmd(plot_handle_thigh_angle, "set yrange [-180:180]");
+			gnuplot_setstyle(plot_handle_thigh_angle, "lines");
 
-		if(FALSE == thigh_samples_fill){
-			gnuplot_plot_x(plot_handle_thigh_angle, x_angle_thigh, thigh_sample, "x angle");
-			gnuplot_plot_x(plot_handle_thigh_angle, y_angle_thigh, thigh_sample, "y angle");
-			gnuplot_plot_x(plot_handle_thigh_angle, z_angle_thigh, thigh_sample, "z angle");
-		}else{
-			gnuplot_plot_x(plot_handle_thigh_angle, x_angle_thigh, 25, "x angle");
-			gnuplot_plot_x(plot_handle_thigh_angle, y_angle_thigh, 25, "y angle");
-			gnuplot_plot_x(plot_handle_thigh_angle, z_angle_thigh, 25, "z angle");
-		}
+			if(FALSE == thigh_samples_fill){
+				gnuplot_plot_x(plot_handle_thigh_angle, angle_thigh, thigh_sample, "Degrees/Seconds");
+			}else{
+				gnuplot_plot_x(plot_handle_thigh_angle, angle_thigh, 25, "Angular Velocity");
+			}
 #endif
 
 		if(thigh_sample < 24){
