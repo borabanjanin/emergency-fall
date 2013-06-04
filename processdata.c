@@ -11,7 +11,7 @@
 #define PI 3.14159265
 //#define PLOTCHESTANGLE
 //#define PLOTTHIGHANGLE
-#define PLOTTHIGHACCEl
+//#define PLOTTHIGHACCEl
 //#define PLOTCHESTACCEl
 //#define VISUALIZATION
 
