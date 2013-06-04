@@ -13,7 +13,7 @@
 //#define PLOTTHIGHANGLE
 //#define PLOTTHIGHACCEl
 //#define PLOTCHESTACCEl
-//#define VISUALIZATION
+#define VISUALIZATION
 
 
 double accel_chest[25];
@@ -367,8 +367,6 @@ int FallDetection(short sensor_id, SensorInfo* sensor, Sample* point){
 		printf("FALL DETECTED GYROSCOPE THIGH\n");
 	}
 	fall_detected = 0;
-	return 0;
-}
 	//printf("Moving Aceel: %f versus Cali Moving Accel: %f \n", sensor->moving_accel, cali_chest.one_g);
 	//printf("Moving Ang: %f verus Cali moving Moving Ang %f \n", sensor->moving_ang, cali_chest.ang_accel);
 #ifdef VISUALIZATION
@@ -378,15 +376,10 @@ int FallDetection(short sensor_id, SensorInfo* sensor, Sample* point){
 	}else if(sensor_id == THIGH){
 		printf("t %f \%f %f \n", sensor->xangle_accel,sensor->yangle_accel,sensor->zangle_accel);
 	}
-	if(fall_detected == 2){
-		//printf("FALL DETECTED ACCELERATION\n");
-	}
-	if(fall_detected == 1){
-		//printf("FALL DETECTED GYROSCOPE\n");
-	}
+#endif
+
 	return 0;
 }
-#endif
 
 
 
