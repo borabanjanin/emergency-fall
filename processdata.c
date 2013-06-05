@@ -335,18 +335,19 @@ int FallDetection(short sensor_id, SensorInfo* sensor, Sample* point){
 
 //	printf("moving ang: %f",sensor->moving_ang);
 //	printf("comp ang: %f \n",sensor->comp_ang);
-	if(cali_chest.standing_fill == TRUE && fall_detected > 0){
+//	if(cali_chest.standing_fill == TRUE && fall_detected > 0){
+		if(cali_chest.standing_fill == TRUE && fall_detected > 0){
 		if(chest_info.xangle_comp  < cali_chest.x_standing_angle * 1.3 && chest_info.xangle_comp >  cali_chest.x_standing_angle * 0.7){
 			if(chest_info.yangle_comp  < cali_chest.y_standing_angle * 1.3 && chest_info.yangle_comp >  cali_chest.y_standing_angle * 0.7){
 				if(chest_info.zangle_comp  < cali_chest.z_standing_angle * 1.3 && chest_info.zangle_comp >  cali_chest.z_standing_angle * 0.7){
-					if(thigh_info.xangle_comp  < cali_chest.x_standing_angle * 1.3 && thigh_info.xangle_comp >  cali_chest.x_standing_angle * 0.7){
-						if(thigh_info.yangle_comp  < cali_chest.y_standing_angle * 1.3 && thigh_info.yangle_comp >  cali_chest.y_standing_angle * 0.7){
-							if(thigh_info.zangle_comp  < cali_chest.z_standing_angle * 1.3 && thigh_info.zangle_comp >  cali_chest.z_standing_angle * 0.7){
+				//	if(thigh_info.xangle_comp  < cali_chest.x_standing_angle * 1.3 && thigh_info.xangle_comp >  cali_chest.x_standing_angle * 0.7){
+				//		if(thigh_info.yangle_comp  < cali_chest.y_standing_angle * 1.3 && thigh_info.yangle_comp >  cali_chest.y_standing_angle * 0.7){
+				//			if(thigh_info.zangle_comp  < cali_chest.z_standing_angle * 1.3 && thigh_info.zangle_comp >  cali_chest.z_standing_angle * 0.7){
 								printf("FALL DETECTION AVERTED STANDING\n");
 								fall_detected = 0;
-							}
-						}
-					}
+				//			}
+				//		}
+			//		}
 				}
 			}
 		}
