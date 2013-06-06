@@ -311,13 +311,12 @@ int FallDetection(short sensor_id, SensorInfo* sensor, Sample* point){
 		if(sensor_id == CHEST && cali_chest.fill == TRUE && sensor->cali_active == FALSE){
 			if(sensor->sample_number == (++last_sample_chest%1000)){
 				if(sensor->moving_accel > cali_chest.one_g * 1.4){
-					printf("%f %f",sensor->moving_accel,cali_chest.one_g*1.4);
 					fall_detected = 3;
-					fall_counter = 10;
+					fall_counter = 16;
 				}
 				if((sensor->moving_ang)>cali_chest.ang_accel*2 && (sensor->moving_ang) > 90){
 					fall_detected = 4;
-					fall_counter = 10;
+					fall_counter = 16;
 				}
 			}
 			last_sample_chest = sensor->sample_number;
@@ -326,13 +325,12 @@ int FallDetection(short sensor_id, SensorInfo* sensor, Sample* point){
 		if(sensor_id == THIGH && cali_thigh.fill == TRUE && sensor->cali_active == FALSE){
 			if(sensor->sample_number == (++last_sample_thigh%1000)){
 				if(sensor->moving_accel > cali_thigh.one_g * 1.4){
-					printf("%f %f",sensor->moving_accel,cali_thigh.one_g*1.4);
 					fall_detected = 2;
-					fall_counter = 10; 
+					fall_counter = 16;
 				}
 				if((sensor->moving_ang)>cali_thigh.ang_accel*2 && sensor->moving_ang > 90){
 					fall_detected = 1;
-					fall_counter = 10;
+					fall_counter = 16;
 				}
 			}
 
