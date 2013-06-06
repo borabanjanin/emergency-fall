@@ -289,6 +289,7 @@ int MovingAverage(SensorInfo* sensor, Sample* point){
 }
 
 short fall_detected = FALSE;
+short fall_counter = 0;
 int FallDetection(short sensor_id, SensorInfo* sensor, Sample* point){	
 	static int last_sample_chest;
 	static int last_sample_thigh;
@@ -311,9 +312,11 @@ int FallDetection(short sensor_id, SensorInfo* sensor, Sample* point){
 				if(sensor->moving_accel > cali_chest.one_g * 1.4){
 					printf("%f %f",sensor->moving_accel,cali_chest.one_g*1.4);
 					fall_detected = 4;
+					fall_counter = 4;
 				}
 				if((sensor->moving_ang)>cali_chest.ang_accel*2 && (sensor->moving_ang) > 130 && point->ang_accel > (sensor->moving_ang) * 1.2){
 					fall_detected = 3;
+					fall_counter = 4;
 				}
 			}
 			last_sample_chest = sensor->sample_number;
@@ -324,16 +327,18 @@ int FallDetection(short sensor_id, SensorInfo* sensor, Sample* point){
 				if(sensor->moving_accel > cali_thigh.one_g * 1.6){
 					printf("%f %f",sensor->moving_accel,cali_thigh.one_g*1.6);
 					fall_detected = 2;
+					fall_counter = 4;
 				}
 				if((sensor->moving_ang)>cali_thigh.ang_accel*2 && sensor->moving_ang > 130 && point->ang_accel > (sensor->moving_ang) * 1.2){
 					fall_detected = 1;
+					fall_counter = 4;
 				}
 			}
 
 			last_sample_thigh =sensor->sample_number;
 		}
 
-
+	fall_counter--;
 	if(cali_chest.standing_fill == TRUE && cali_thigh.standing_fill == TRUE){
 		printf("cali x: %f y: %f z: %f \n",cali_chest.x_standing_angle,cali_chest.y_standing_angle,cali_chest.z_standing_angle);
 		printf("comp x: %f y: %f z: %f \n",chest_info.xangle_comp,chest_info.yangle_comp,chest_info.zangle_comp);
@@ -345,6 +350,7 @@ int FallDetection(short sensor_id, SensorInfo* sensor, Sample* point){
 							if(thigh_info.zangle_comp  < cali_thigh.z_standing_angle + 30 && thigh_info.zangle_comp >  cali_thigh.z_standing_angle - 30){
 								printf("FALL DETECTION AVERTED STANDING\n");
 								fall_detected = 0;
+								fall_counter = 0;
 							}
 						}
 					}
@@ -355,21 +361,20 @@ int FallDetection(short sensor_id, SensorInfo* sensor, Sample* point){
 		printf("Not Standing Fill");
 	}
 
-	if(fall_detected == 4){
+	if(fall_detected == 4 && fall_counter == 0){
 		printf("FALL DETECTED ACCELERATION CHEST\n");
 	}
-	if(fall_detected == 3){
+	if(fall_detected == 3 && fall_counter == 0){
 		printf("FALL DETECTED GYROSCOPE CHEST\n");
 	}
 
 
-	if(fall_detected == 2){
+	if(fall_detected == 2 && fall_counter == 0){
 		printf("FALL DETECTED ACCELERATION THIGH\n");
 	}
-	if(fall_detected == 1){
+	if(fall_detected == 1 && fall_counter == 0){
 		printf("FALL DETECTED GYROSCOPE THIGH\n");
 	}
-	fall_detected = 0;
 	//printf("Moving Aceel: %f versus Cali Moving Accel: %f \n", sensor->moving_accel, cali_chest.one_g);
 	//printf("Moving Ang: %f verus Cali moving Moving Ang %f \n", sensor->moving_ang, cali_chest.ang_accel);
 #ifdef VISUALIZATION
