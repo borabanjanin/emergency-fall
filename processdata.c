@@ -297,27 +297,27 @@ int FallDetection(short sensor_id, SensorInfo* sensor, Sample* point){
 
 #ifdef LOG
 	if(sensor_id == CHEST){
-		sprintf(logfile, "c ");
+		fprintf(logfile, "c ");
 	}else{
-		sprintf(logfile, "t ");
+		fprintf(logfile, "t ");
 	}
-	sprintf(logfile, "%i ",point->xaccel);
-	sprintf(logfile,"%i ",point->yaccel);
-	sprintf(logfile,"%i ",point->zaccel);
-	sprintf(logfile,"%i ",point->xrot);
-	sprintf(logfile,"%i ",point->yrot);
-	sprintf(logfile,"%i \n",point->zrot);
+	fprintf(logfile, "%i ",point->xaccel);
+	fprintf(logfile,"%i ",point->yaccel);
+	fprintf(logfile,"%i ",point->zaccel);
+	fprintf(logfile,"%i ",point->xrot);
+	fprintf(logfile,"%i ",point->yrot);
+	fprintf(logfile,"%i \n",point->zrot);
 #endif
 		if(sensor_id == CHEST && cali_chest.fill == TRUE && sensor->cali_active == FALSE){
 			if(sensor->sample_number == (++last_sample_chest%1000)){
 				if(sensor->moving_accel > cali_chest.one_g * 1.4){
 					printf("%f %f",sensor->moving_accel,cali_chest.one_g*1.4);
-					fall_detected = 4;
-					fall_counter = 4;
+					fall_detected = 3;
+					fall_counter = 10;
 				}
 				if((sensor->moving_ang)>cali_chest.ang_accel*2 && (sensor->moving_ang) > 90){
-					fall_detected = 3;
-					fall_counter = 4;
+					fall_detected = 4;
+					fall_counter = 10;
 				}
 			}
 			last_sample_chest = sensor->sample_number;
@@ -328,11 +328,11 @@ int FallDetection(short sensor_id, SensorInfo* sensor, Sample* point){
 				if(sensor->moving_accel > cali_thigh.one_g * 1.4){
 					printf("%f %f",sensor->moving_accel,cali_thigh.one_g*1.4);
 					fall_detected = 2;
-					fall_counter = 4;
+					fall_counter = 10; 
 				}
 				if((sensor->moving_ang)>cali_thigh.ang_accel*2 && sensor->moving_ang > 90){
 					fall_detected = 1;
-					fall_counter = 4;
+					fall_counter = 10;
 				}
 			}
 
@@ -356,7 +356,7 @@ int FallDetection(short sensor_id, SensorInfo* sensor, Sample* point){
 			}
 		}
 	}else{
-		printf("Not Standing Fill");
+//		printf("Not Standing Fill");
 	}
 
 	if(fall_detected == 4 && fall_counter == 0){
