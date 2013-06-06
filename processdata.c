@@ -335,9 +335,9 @@ int FallDetection(short sensor_id, SensorInfo* sensor, Sample* point){
 
 
 //	if(cali_chest.standing_fill == TRUE && fall_detected > 0){
-	printf("cali x: %f y: %f z: %f \n",cali_chest.x_standing_angle,cali_chest.y_standing_angle,cali_chest.z_standing_angle);
-	printf("comp x: %f y: %f z: %f \n",chest_info.xangle_comp,chest_info.yangle_comp,chest_info.zangle_comp);
 	if(cali_chest.standing_fill == TRUE){
+		printf("cali x: %f y: %f z: %f \n",cali_chest.x_standing_angle,cali_chest.y_standing_angle,cali_chest.z_standing_angle);
+		printf("comp x: %f y: %f z: %f \n",chest_info.xangle_comp,chest_info.yangle_comp,chest_info.zangle_comp);
 		if(chest_info.xangle_comp  < cali_chest.x_standing_angle + 30 && chest_info.xangle_comp >  cali_chest.x_standing_angle - 30){
 			if(chest_info.yangle_comp  < cali_chest.y_standing_angle + 30 && chest_info.yangle_comp >  cali_chest.y_standing_angle - 30){
 				if(chest_info.zangle_comp  < cali_chest.z_standing_angle + 30 && chest_info.zangle_comp >  cali_chest.z_standing_angle - 30){
