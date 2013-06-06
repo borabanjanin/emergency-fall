@@ -12,8 +12,8 @@
 #define LOG
 //#define PLOTCHESTANGLE
 //#define PLOTTHIGHANGLE
-//#define PLOTTHIGHACCEl
-//#define PLOTCHESTACCEl
+#define PLOTTHIGHACCEl
+#define PLOTCHESTACCEl
 //#define VISUALIZATION
 
 
@@ -66,7 +66,7 @@ int GraphData(short sensor_id, SensorInfo* point_data, Sample* point){
 
 		gnuplot_resetplot(plot_handle_chest_angle);
 		gnuplot_set_xlabel(plot_handle_chest_angle, "Chest Angular Velocity");
-		gnuplot_cmd(plot_handle_chest_angle, "set yrange [-180:180]");
+		gnuplot_cmd(plot_handle_chest_angle, "set yrange [0:250]");
 		gnuplot_setstyle(plot_handle_chest_angle, "lines");
 
 		if(FALSE == chest_samples_fill){
@@ -104,7 +104,7 @@ int GraphData(short sensor_id, SensorInfo* point_data, Sample* point){
 
 			gnuplot_resetplot(plot_handle_thigh_angle);
 			gnuplot_set_xlabel(plot_handle_thigh_angle, "Thigh Angular Velocity");
-			gnuplot_cmd(plot_handle_thigh_angle, "set yrange [-180:180]");
+			gnuplot_cmd(plot_handle_thigh_angle, "set yrange [0:250]");
 			gnuplot_setstyle(plot_handle_thigh_angle, "lines");
 
 			if(FALSE == thigh_samples_fill){
