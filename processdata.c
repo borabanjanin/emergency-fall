@@ -9,6 +9,7 @@
 #define TRUE 1
 #define FALSE 0
 #define PI 3.14159265
+#define LOG
 //#define PLOTCHESTANGLE
 //#define PLOTTHIGHANGLE
 //#define PLOTTHIGHACCEl
@@ -314,7 +315,7 @@ int FallDetection(short sensor_id, SensorInfo* sensor, Sample* point){
 					fall_detected = 4;
 					fall_counter = 4;
 				}
-				if((sensor->moving_ang)>cali_chest.ang_accel*2 && (sensor->moving_ang) > 130 && point->ang_accel > (sensor->moving_ang) * 1.2){
+				if((sensor->moving_ang)>cali_chest.ang_accel*2 && (sensor->moving_ang) > 90){
 					fall_detected = 3;
 					fall_counter = 4;
 				}
@@ -329,7 +330,7 @@ int FallDetection(short sensor_id, SensorInfo* sensor, Sample* point){
 					fall_detected = 2;
 					fall_counter = 4;
 				}
-				if((sensor->moving_ang)>cali_thigh.ang_accel*2 && sensor->moving_ang > 130 && point->ang_accel > (sensor->moving_ang) * 1.2){
+				if((sensor->moving_ang)>cali_thigh.ang_accel*2 && sensor->moving_ang > 90){
 					fall_detected = 1;
 					fall_counter = 4;
 				}
@@ -346,7 +347,6 @@ int FallDetection(short sensor_id, SensorInfo* sensor, Sample* point){
 					if(thigh_info.xangle_comp  < cali_thigh.x_standing_angle + 30 && thigh_info.xangle_comp >  cali_thigh.x_standing_angle - 30){
 						if(thigh_info.yangle_comp  < cali_thigh.y_standing_angle + 30 && thigh_info.yangle_comp >  cali_thigh.y_standing_angle - 30){
 							if(thigh_info.zangle_comp  < cali_thigh.z_standing_angle + 30 && thigh_info.zangle_comp >  cali_thigh.z_standing_angle - 30){
-								printf("FALL DETECTION AVERTED STANDING\n");
 								fall_detected = 0;
 								fall_counter = 0;
 							}
